@@ -41,9 +41,6 @@ class StorageFunctions:
             data_list.append(data_to_add)
         return data_list
 
-    def delete(self):
-        pass
-
 
 if __name__ == "__main__":
     # obj = StorageFunctions("test.txt", "a\nb\nc\nd\ne\nf\ng\nh\ni\nj\nk")

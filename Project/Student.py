@@ -17,7 +17,7 @@ class Student:
         self.summer_mark_sheet = _MarkSheet(self.name, "Summer", self.year_group, "Test")
         self.spring_mark_sheet = _MarkSheet(self.name, "Spring", self.year_group, "Test")
         self.autumn_mark_sheet = _MarkSheet(self.name, "Spring", self.year_group, "Test")
-        self.studentmenu_dict = {'1': Student.editmarksheet, '2': Student.getstudentdetails, '3': Student.getmarksheetdetails, '4': Student.getmarksheetmarks, '5': StorageFunctions.delete}
+        self.studentmenu_dict = {'1': Student.editmarksheet, '2': Student.getstudentdetails, '3': Student.getmarksheetdetails, '4': Student.getmarksheetmarks, '5': Student.deletestudent}
 
     @classmethod
     def recreatestudent(cls, name):
@@ -50,10 +50,17 @@ class Student:
         _MarkSheet.getmarks(getattr(self, mark_sheet_choice.lower() + "_mark_sheet"))
 
     @staticmethod
-    def editdata(student):
+    def savedata(student):
         data, location = sortbyname(student.name)
         DataUpdate = StorageFunctions("/Users/nitindhall/PycharmProjects/Programs/Project/Text Files/Student.txt", student.name + "§" + student.age + "§" + student.year_group + "§" + student.summer_mark_sheet.student + "§" + student.summer_mark_sheet.term + "§" + student.summer_mark_sheet.year_group + "§" + student.summer_mark_sheet.teacher + "§" + str(student.summer_mark_sheet.math_grade) + "§" + str(student.summer_mark_sheet.science_grade) + "§" + str(student.summer_mark_sheet.english_grade) + "§" + student.spring_mark_sheet.student + "§" + student.spring_mark_sheet.term + "§" + student.spring_mark_sheet.year_group + "§" + student.spring_mark_sheet.teacher + "§" + str(student.spring_mark_sheet.math_grade) + "§" + str(student.spring_mark_sheet.science_grade) + "§" + str(student.spring_mark_sheet.english_grade) + "§" + student.autumn_mark_sheet.student + "§" + student.autumn_mark_sheet.term + "§" + student.autumn_mark_sheet.year_group + "§" + student.autumn_mark_sheet.teacher + "§" + str(student.autumn_mark_sheet.math_grade) + "§" + str(student.autumn_mark_sheet.science_grade) + "§" + str(student.autumn_mark_sheet.english_grade) + "§\n")
         DataUpdate.update(location)
+
+    def deletestudent(self):
+        data, location = sortbyname(self.name)
+        Delete = StorageFunctions("/Users/nitindhall/PycharmProjects/Programs/Project/Text Files/Student.txt", "")
+        Delete.update(location)
+        print(self.name, "successfully deleted!")
+        return True, False
 
 
 def sortbyname(name):
@@ -96,4 +103,4 @@ if __name__ == "__main__":
     student3.savestudentdata()
     del student1, student2, student3
     student_obj = Student.recreatestudent(input("Enter student name:"))
-    Student.editdata(student_obj)
+    Student.savedata(student_obj)

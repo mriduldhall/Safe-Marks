@@ -27,10 +27,6 @@ def create():
             print("Student already exists! Please go to manage.")
         continuation_check = bool(int(input("Enter 1 to create another student and 0 to head back to main menu.")))
 
-# INFO Manage
-# INFO Student overall
-# INFO Student depth
-
 
 def manage():
     def checkifstudentexists(name):
@@ -73,7 +69,7 @@ def manage():
                     else:
                         student.studentmenu_dict[student_menu_choice](student)
                         valid_input = True
-            student.editdata(student)
+            student.savedata(student)
         else:
             print("Student does not exist! Please create student first.")
 
