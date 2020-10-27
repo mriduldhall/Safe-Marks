@@ -17,7 +17,7 @@ class Student:
         self.summer_mark_sheet = _MarkSheet(self.name, "Summer", self.year_group, "Test")
         self.spring_mark_sheet = _MarkSheet(self.name, "Spring", self.year_group, "Test")
         self.autumn_mark_sheet = _MarkSheet(self.name, "Spring", self.year_group, "Test")
-        self.studentmenu_dict = {'e': Student.editmarksheet, '1': Student.editmarksheet, 'sd': Student.getstudentdetails, '2': Student.getstudentdetails, 'md': Student.getmarksheetdetails, '3': Student.getmarksheetdetails, 'm': Student.getmarksheetmarks, '4': Student.getmarksheetmarks, 'd': StorageFunctions.delete, '5': StorageFunctions.delete}
+        self.studentmenu_dict = {'1': Student.editmarksheet, '2': Student.getstudentdetails, '3': Student.getmarksheetdetails, '4': Student.getmarksheetmarks, '5': StorageFunctions.delete}
 
     @classmethod
     def recreatestudent(cls, name):
@@ -31,7 +31,6 @@ class Student:
     def editmarksheet(self):
         mark_sheet_choice = _choosemarksheet("edit")
         self.__getattribute__(mark_sheet_choice.lower() + "_mark_sheet").editmarksheet()
-        self.getmarksheetmarks()
 
     def savestudentdata(self):
         DataStorage = StorageFunctions("/Users/nitindhall/PycharmProjects/Programs/Project/Text Files/Student.txt", self.name + "§" + self.age + "§" + self.year_group + "§" + self.summer_mark_sheet.student + "§" + self.summer_mark_sheet.term + "§" + self.summer_mark_sheet.year_group + "§" + self.summer_mark_sheet.teacher + "§" + str(self.summer_mark_sheet.math_grade) + "§" + str(self.summer_mark_sheet.science_grade) + "§" + str(self.summer_mark_sheet.english_grade) + "§" + self.spring_mark_sheet.student + "§" + self.spring_mark_sheet.term + "§" + self.spring_mark_sheet.year_group + "§" + self.spring_mark_sheet.teacher + "§" + str(self.spring_mark_sheet.math_grade) + "§" + str(self.spring_mark_sheet.science_grade) + "§" + str(self.spring_mark_sheet.english_grade) + "§" + self.autumn_mark_sheet.student + "§" + self.autumn_mark_sheet.term + "§" + self.autumn_mark_sheet.year_group + "§" + self.autumn_mark_sheet.teacher + "§" + str(self.autumn_mark_sheet.math_grade) + "§" + str(self.autumn_mark_sheet.science_grade) + "§" + str(self.autumn_mark_sheet.english_grade) + "§\n")
@@ -51,10 +50,8 @@ class Student:
         _MarkSheet.getmarks(getattr(self, mark_sheet_choice.lower() + "_mark_sheet"))
 
     @staticmethod
-    def editdata(name):
-        data, location = sortbyname(name)
-        student = Student.recreatestudent(name)
-        student.editmarksheet()
+    def editdata(student):
+        data, location = sortbyname(student.name)
         DataUpdate = StorageFunctions("/Users/nitindhall/PycharmProjects/Programs/Project/Text Files/Student.txt", student.name + "§" + student.age + "§" + student.year_group + "§" + student.summer_mark_sheet.student + "§" + student.summer_mark_sheet.term + "§" + student.summer_mark_sheet.year_group + "§" + student.summer_mark_sheet.teacher + "§" + str(student.summer_mark_sheet.math_grade) + "§" + str(student.summer_mark_sheet.science_grade) + "§" + str(student.summer_mark_sheet.english_grade) + "§" + student.spring_mark_sheet.student + "§" + student.spring_mark_sheet.term + "§" + student.spring_mark_sheet.year_group + "§" + student.spring_mark_sheet.teacher + "§" + str(student.spring_mark_sheet.math_grade) + "§" + str(student.spring_mark_sheet.science_grade) + "§" + str(student.spring_mark_sheet.english_grade) + "§" + student.autumn_mark_sheet.student + "§" + student.autumn_mark_sheet.term + "§" + student.autumn_mark_sheet.year_group + "§" + student.autumn_mark_sheet.teacher + "§" + str(student.autumn_mark_sheet.math_grade) + "§" + str(student.autumn_mark_sheet.science_grade) + "§" + str(student.autumn_mark_sheet.english_grade) + "§\n")
         DataUpdate.update(location)
 
@@ -98,4 +95,5 @@ if __name__ == "__main__":
     student2.savestudentdata()
     student3.savestudentdata()
     del student1, student2, student3
-    Student.editdata(input("Enter student name:"))
+    student_obj = Student.recreatestudent(input("Enter student name:"))
+    Student.editdata(student_obj)

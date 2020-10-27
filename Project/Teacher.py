@@ -33,14 +33,6 @@ def create():
 
 
 def manage():
-    class AllowedValuesStudentMenu(Enum):
-        edit_marks = 'e' or '1'
-        get_student_details = 'sd' or '2'
-        get_mark_sheet_details = 'md' or '3'
-        get_marks = 'm' or '4'
-        delete_student = 'd' or '5'
-        exit = 'l' or '0'
-
     def checkifstudentexists(name):
         exist_check = StorageFunctions("/Users/nitindhall/PycharmProjects/Programs/Project/Text Files/Student.txt", name)
         result = exist_check.retrieve(1)
@@ -70,9 +62,18 @@ def manage():
             student = Student.recreatestudent(student_to_retrieve)
             exit_condition = False
             while exit_condition is False:
-                student_menu_choice = input("Enter e or 1 to edit marks of the student, sd or 2 to get student details, md or 3 to get mark sheet details, m or 4 to get marks, d or 5 to delete student and l or 0 to leave this menu:")
-                student.studentmenu_dict[student_menu_choice](student)
-                exit_condition = bool(int(input("Enter 1 to continue working on this student and 0 to ")))
+                valid_input = False
+                while valid_input is False:
+                    student_menu_choice = input("Enter 1 to edit marks of the student, 2 to get student details, 3 to get mark sheet details, 4 to get marks, 5 to delete student 6 to leave this menu:")
+                    if student_menu_choice == str(len(student.studentmenu_dict)+1):
+                        exit_condition = True
+                        valid_input = True
+                    elif (student_menu_choice > str(len(student.studentmenu_dict)+1)) or student_menu_choice < "1":
+                        print("Please enter a valid choice!")
+                    else:
+                        student.studentmenu_dict[student_menu_choice](student)
+                        valid_input = True
+            student.editdata(student)
         else:
             print("Student does not exist! Please create student first.")
 

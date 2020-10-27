@@ -25,6 +25,7 @@ class _MarkSheet:
                 print("Enter new", marksheeteditingstrings[choice], "grade:", end='')
                 new_grade = input()
                 setattr(self, marksheeteditingvariables[choice], new_grade)
+        self.getmarks()
 
     def getdetails(self):
         print("Student name =", self.student)
