@@ -57,6 +57,7 @@ def manage():
         if valid_name is True:
             student = Student.recreatestudent(student_to_retrieve)
             exit_condition = False
+            save_needed = False
             while exit_condition is False:
                 valid_input = False
                 while valid_input is False:
@@ -64,12 +65,18 @@ def manage():
                     if student_menu_choice == str(len(student.studentmenu_dict)+1):
                         exit_condition = True
                         valid_input = True
+                    elif student_menu_choice == str(len(student.studentmenu_dict)):
+                        student.studentmenu_dict[student_menu_choice](student)
+                        exit_condition = True
+                        valid_input = True
                     elif (student_menu_choice > str(len(student.studentmenu_dict)+1)) or student_menu_choice < "1":
                         print("Please enter a valid choice!")
                     else:
                         student.studentmenu_dict[student_menu_choice](student)
                         valid_input = True
-            student.savedata(student)
+                        save_needed = True
+            if save_needed is True:
+                student.savedata(student)
         else:
             print("Student does not exist! Please create student first.")
 
