@@ -26,6 +26,7 @@ def create():
         else:
             print("Student already exists! Please go to manage.")
         continuation_check = bool(int(input("Enter 1 to create another student and 0 to head back to main menu.")))
+    return True
 
 
 def manage():
@@ -96,28 +97,31 @@ def manage():
         try_again = True
         while try_again is True:
             try_again = validatename()
+    return True
 
 
 def settings():
     print("I am in settings")
+    return True
 
 
 def logout():
-    print("I am in logout")
+    print("Logging out...\nRedirecting to main page...")
+    return False
 
 
 def mainmenu():
-    while True:
+    mainmenudictionary = {'c': create, 'm': manage, 's': settings, 'l': logout}
+    exit_control = True
+    while exit_control:
         try:
             print("---Home Screen---")
             main_menu_choice = AllowedValuesMainMenu(input("Enter c to create new students, m to manage students and their mark sheets, s for settings and l to logout"))
         except ValueError:
             print("Enter valid choice c, m, s, l)")
         else:
-            return main_menu_choice.value
+            exit_control = mainmenudictionary[main_menu_choice.value]()
 
 
-mainmenudictionary = {'c': create, 'm': manage, 's': settings, 'l': logout}
 if __name__ == "__main__":
-    main_menu_decision = mainmenu()
-    mainmenudictionary[main_menu_decision]()
+    mainmenu()
