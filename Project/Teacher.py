@@ -29,48 +29,6 @@ def create():
 
 
 def manage():
-    def menu(student):
-        save_needed = False
-        student_menu_choice = input("Enter 1 to edit marks of the student, 2 to get student details, 3 to get mark sheet details, 4 to get marks, 5 to delete student 6 to leave this menu:")
-        if student_menu_choice == str(len(student.studentmenu_dict)+1):
-            exit_condition = True
-            valid_input = True
-        elif student_menu_choice == str(len(student.studentmenu_dict)):
-            student.studentmenu_dict[student_menu_choice](student)
-            exit_condition = True
-            valid_input = True
-        elif (student_menu_choice > str(len(student.studentmenu_dict)+1)) or student_menu_choice < "1":
-            print("Please enter a valid choice!")
-            valid_input = False
-            exit_condition = False
-        else:
-            student.studentmenu_dict[student_menu_choice](student)
-            exit_condition = False
-            valid_input = True
-            save_needed = True
-        return valid_input, exit_condition, save_needed
-
-    def managecontrol(student):
-        exit_condition = False
-        save_needed = False
-        valid_input = False
-        while (exit_condition is False) or (valid_input is False):
-            valid_input, exit_condition, save_needed = menu(student)
-        if save_needed is True:
-            student.savedata(student)
-
-    def validatename():
-        getstudentlist()
-        student_to_retrieve = input("Enter student name to manage student:").capitalize()
-        valid_name = checkifstudentexists(student_to_retrieve)
-        if valid_name is True:
-            student = Student.recreatestudent(student_to_retrieve)
-            managecontrol(student)
-        else:
-            print("Student does not exist! Please create student first.")
-        new_user_check = bool(int(input("Enter 1 to enter another name and work on another student or 0 to leave.")))
-        return new_user_check
-
     def checkifstudentexists(name):
         exist_check = StorageFunctions("/Users/nitindhall/PycharmProjects/Programs/Project/Text Files/Student.txt", name)
         result = exist_check.retrieve(1)
@@ -95,7 +53,35 @@ def manage():
     if continuation_check is True:
         try_again = True
         while try_again is True:
-            try_again = validatename()
+            getstudentlist()
+            student_to_retrieve = input("Enter student name to manage student:").capitalize()
+            valid_name = checkifstudentexists(student_to_retrieve)
+            if valid_name is True:
+                student = Student.recreatestudent(student_to_retrieve)
+                exit_condition = False
+                save_needed = False
+                while exit_condition is False:
+                    valid_input = False
+                    while valid_input is False:
+                        student_menu_choice = input("Enter 1 to edit marks of the student, 2 to get student details, 3 to get mark sheet details, 4 to get marks, 5 to delete student 6 to leave this menu:")
+                        if student_menu_choice == str(len(student.studentmenu_dict)+1):
+                            exit_condition = True
+                            valid_input = True
+                        elif student_menu_choice == str(len(student.studentmenu_dict)):
+                            student.studentmenu_dict[student_menu_choice](student)
+                            exit_condition = True
+                            valid_input = True
+                        elif (student_menu_choice > str(len(student.studentmenu_dict)+1)) or student_menu_choice < "1":
+                            print("Please enter a valid choice!")
+                        else:
+                            student.studentmenu_dict[student_menu_choice](student)
+                            valid_input = True
+                            save_needed = True
+                if save_needed is True:
+                    student.savedata(student)
+            else:
+                print("Student does not exist! Please create student first.")
+            try_again = bool(int(input("Enter 1 to enter another name and work on another student or 0 to leave.")))
 
 
 def settings():
