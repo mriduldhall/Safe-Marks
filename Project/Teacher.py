@@ -67,7 +67,7 @@ def manage():
             student = Student.recreatestudent(student_to_retrieve)
             managecontrol(student)
         else:
-            print("Student does not exist! Please create student first.")
+            print("Student does not exist! Please create student first in create menu.")
         new_user_check = bool(int(input("Enter 1 to enter another name and work on another student or 0 to leave.")))
         return new_user_check
 
