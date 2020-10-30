@@ -16,9 +16,9 @@ class StorageFunctions:
                 data = line.split('§')
                 string_check = data[position-1]
                 if string_check == self.data:
-                    return line, line_counter
+                    return str(line), int(line_counter)
                 line_counter += 1
-            return None
+            return None, None
         except EOFError:
             return None
 

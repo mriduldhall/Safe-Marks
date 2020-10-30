@@ -19,14 +19,14 @@ def create():
         student_exist_check = StorageFunctions("/Users/nitindhall/PycharmProjects/Programs/Project/Text Files/Student.txt", name)
         data = student_exist_check.retrieve(1)
         if data is None:
-            student = Student(name, age, year_group)
+            student = Student(name, age, year_group, teacher_name)
             student.savestudentdata()
             student.getstudentdetails()
             del student
         else:
             print("Student already exists! Please go to manage.")
         continuation_check = bool(int(input("Enter 1 to create another student and 0 to head back to main menu.")))
-    return True
+    return False
 
 
 def manage():
@@ -97,23 +97,64 @@ def manage():
         try_again = True
         while try_again is True:
             try_again = validatename()
-    return True
+    return False
+
+# TODO Finish up settings
 
 
 def settings():
-    print("I am in settings")
-    return True
+    def editpassword():
+        confirm_continuation = bool(int(input("Enter 1 to change your password and 0 to exit:")))
+        if confirm_continuation is True:
+            try_again = True
+            while try_again is True:
+                print("Your username is:", teacher_name)
+                confirm_password = input("Enter your old password:")
+                confirm_data = StorageFunctions("/Users/nitindhall/PycharmProjects/Programs/Project/Text Files/User.txt", confirm_password)
+                data, location = confirm_data.retrieve(2)
+                if data is not None:
+                    new_password = input("Enter your new password:")
+                    confirm_new_password = input("Confirm password:")
+                    if new_password == confirm_new_password:
+                        edit_password = StorageFunctions("/Users/nitindhall/PycharmProjects/Programs/Project/Text Files/User.txt", teacher_name + "§" + new_password + "§\n")
+                        edit_password.update(location)
+                        print("Password successfully changed!")
+                        try_again = False
+                    else:
+                        print("Incorrect re-entered password!")
+                        try_again = bool(int(input("Enter 1 to try again and 0 to exit:")))
+                else:
+                    print("Password is incorrect!")
+                    try_again = bool(int(input("Enter 1 to try again and 0 to exit:")))
+            return False, False
+        else:
+            return False, False
+
+    def delete():
+        return True, True
+
+    def exit():
+        return True, False
+
+    settingsmenu_dict = {'1': editpassword, '2': delete, '0': exit}
+    exit_control = False
+    while exit_control is False:
+        settings_choice = input("Enter 1 to edit password, 2 to delete account and 0 to exit settings:")
+        exit_control, direct_exit = settingsmenu_dict[settings_choice]()
+    return direct_exit
 
 
 def logout():
     print("Logging out...\nRedirecting to main page...")
-    return False
+    return True
 
 
-def mainmenu():
+def mainmenu(username):
+    global teacher_name
+    teacher_name = username
     mainmenudictionary = {'c': create, 'm': manage, 's': settings, 'l': logout}
-    exit_control = True
-    while exit_control:
+    exit_control = False
+    while exit_control is False:
         try:
             print("---Home Screen---")
             main_menu_choice = AllowedValuesMainMenu(input("Enter c to create new students, m to manage students and their mark sheets, s for settings and l to logout"))
@@ -124,4 +165,4 @@ def mainmenu():
 
 
 if __name__ == "__main__":
-    mainmenu()
+    mainmenu("admin")

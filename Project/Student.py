@@ -10,19 +10,19 @@ class AllowedMarkSheetChoice(Enum):
 
 
 class Student:
-    def __init__(self, name, age, year_group):
+    def __init__(self, name, age, year_group, teacher):
         self.name = name
         self.age = age
         self.year_group = year_group
-        self.summer_mark_sheet = _MarkSheet(self.name, "Summer", self.year_group, "Test")
-        self.spring_mark_sheet = _MarkSheet(self.name, "Spring", self.year_group, "Test")
-        self.autumn_mark_sheet = _MarkSheet(self.name, "Spring", self.year_group, "Test")
+        self.summer_mark_sheet = _MarkSheet(self.name, "Summer", self.year_group, teacher)
+        self.spring_mark_sheet = _MarkSheet(self.name, "Spring", self.year_group, teacher)
+        self.autumn_mark_sheet = _MarkSheet(self.name, "Spring", self.year_group, teacher)
         self.studentmenu_dict = {'1': Student.editmarksheet, '2': Student.getstudentdetails, '3': Student.getmarksheetdetails, '4': Student.getmarksheetmarks, '5': Student.deletestudent}
 
     @classmethod
     def recreatestudent(cls, name):
         student_data, location = sortbyname(name)
-        student = Student(student_data.split('§')[0], student_data.split('§')[1], student_data.split('§')[2])
+        student = Student(student_data.split('§')[0], student_data.split('§')[1], student_data.split('§')[2], student_data.split('§')[6])
         student.summer_mark_sheet = _MarkSheet(student_data.split('§')[3], student_data.split('§')[4], student_data.split('§')[5], student_data.split('§')[6], student_data.split('§')[7], student_data.split('§')[8], student_data.split('§')[9])
         student.spring_mark_sheet = _MarkSheet(student_data.split('§')[10], student_data.split('§')[11], student_data.split('§')[12], student_data.split('§')[13], student_data.split('§')[14], student_data.split('§')[15], student_data.split('§')[16])
         student.autumn_mark_sheet = _MarkSheet(student_data.split('§')[17], student_data.split('§')[18], student_data.split('§')[19], student_data.split('§')[20], student_data.split('§')[21], student_data.split('§')[22], student_data.split('§')[23])
@@ -95,9 +95,9 @@ if __name__ == "__main__":
     file = open("Text Files/Student.txt", "r+")
     file.truncate(0)
     file.close()
-    student1 = Student("Nitin", "41", "12")
-    student2 = Student("Upma", "43", "11")
-    student3 = Student("Mridul", "14", "10")
+    student1 = Student("Nitin", "41", "12", "Test")
+    student2 = Student("Upma", "43", "11", "Test")
+    student3 = Student("Mridul", "14", "10", "Test")
     student1.savestudentdata()
     student2.savestudentdata()
     student3.savestudentdata()
