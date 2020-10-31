@@ -1,6 +1,8 @@
 from enum import Enum
 from Student import Student
 from StorageFunctions import StorageFunctions
+import time
+import random
 
 
 class AllowedValuesMainMenu(Enum):
@@ -99,8 +101,6 @@ def manage():
             try_again = validatename()
     return False
 
-# TODO Finish up settings
-
 
 def settings():
     def editpassword():
@@ -131,9 +131,29 @@ def settings():
             return False, False
 
     def delete():
-        return True, True
+        confirm_continuation = bool(int(input("Enter 1 to delete your account and 0 to exit:")))
+        if confirm_continuation is True:
+            try_again = True
+            while try_again is True:
+                password = input("Enter your password to confirm deletion:")
+                confirm_data = StorageFunctions("/Users/nitindhall/PycharmProjects/Programs/Project/Text Files/User.txt", password)
+                data, location = confirm_data.retrieve(2)
+                if data is not None:
+                    account_deletion = StorageFunctions("/Users/nitindhall/PycharmProjects/Programs/Project/Text Files/User.txt", "")
+                    account_deletion.update(location)
+                    print("Account successfully deleted!\nRedirecting to main page...")
+                    # waitrandomtime(2, 5)
+                    return True, True
+                else:
+                    print("Password is incorrect!")
+                    try_again = bool(int(input("Enter 1 to try again and 0 to exit:")))
+            return False, False
+        else:
+            return False, False
 
     def exit():
+        print("Exiting settings...")
+        # waitrandomtime(1, 1)
         return True, False
 
     settingsmenu_dict = {'1': editpassword, '2': delete, '0': exit}
@@ -145,8 +165,15 @@ def settings():
 
 
 def logout():
-    print("Logging out...\nRedirecting to main page...")
+    print("Logging out...")
+    # waitrandomtime(1, 3)
+    print("Redirecting to main page...")
+    # waitrandomtime(2, 5)
     return True
+
+
+def waitrandomtime(start, end):
+    time.sleep(random.randint(start, end))
 
 
 def mainmenu(username):
