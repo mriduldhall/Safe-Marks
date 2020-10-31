@@ -1,5 +1,6 @@
 from enum import Enum
 from StorageFunctions import StorageFunctions
+from Teacher import mainmenu as teacher_mainmenu
 
 
 class AllowedValuesMainMenu(Enum):
@@ -43,42 +44,52 @@ class User:
         self.password = pword
 
     def register(self):
-        NewUserData = StorageFunctions("User.txt", self.username)
-        Data = NewUserData.retrieve(1)
-        if Data is None:
-            NewUserStorage = StorageFunctions("User.txt", self.username + "§" + self.password + "§\n")
-            NewUserStorage.append()
+        new_user_data = StorageFunctions("/Users/nitindhall/PycharmProjects/Programs/Project/Text Files/User.txt", self.username)
+        data, location = new_user_data.retrieve(1)
+        if data is None:
+            new_user_storage = StorageFunctions("/Users/nitindhall/PycharmProjects/Programs/Project/Text Files/User.txt", self.username + "§" + self.password + "§\n")
+            new_user_storage.append()
             print("You have successfully created an account with the username", self.username)
         else:
             print("Username is already taken")
 
     def login(self):
-        while True:
-            CurrentUserData = StorageFunctions("User.txt", self.username)
-            Data = CurrentUserData.retrieve(1)
-            if Data is None:
+        logged_in = False
+        try_again = True
+        while (logged_in is False) and (try_again is True):
+            self.username = input("Enter your username:")
+            self.password = input("Enter your password:")
+            current_user_data = StorageFunctions("/Users/nitindhall/PycharmProjects/Programs/Project/Text Files/User.txt", self.username)
+            data, location = current_user_data.retrieve(1)
+            if data is None:
                 print("Entered username does not exist")
-                return bool(int(input("Would you like to try again? Enter 1 to try again and 0 to exit.")))
+                try_again = bool(int(input("Would you like to try again? Enter 1 to try again and 0 to exit.")))
             else:
-                Data = Data.split("§")
-                password_check = Data[1]
+                data = data.split("§")
+                password_check = data[1]
                 if self.password == password_check:
                     print("Successfully logged in")
-                    return False
+                    logged_in = True
+                    try_again = False
+                    logged_in_username = self.username
                 else:
                     print("Incorrect username and/or password")
-                    return bool(int(input("Would you like to try again? Enter 1 to try again and 0 to exit.")))
+                    try_again = bool(int(input("Would you like to try again? Enter 1 to try again and 0 to exit.")))
+        if logged_in_username is not None:
+            return logged_in_username
+        else:
+            return None
 
 
 def mainmenu():
     while True:
         try:
-            MainMenuChoice = AllowedValuesMainMenu(input(
+            main_menu_choice = AllowedValuesMainMenu(input(
                 "Enter r to register a teacher account, l to login or i to get more information.\nEnter e to exit the software."))
         except ValueError:
             print("Enter valid choice (l,r, i, e)")
         else:
-            return MainMenuChoice.value
+            return main_menu_choice.value
 
 
 def getnewuserdetails():
@@ -94,50 +105,41 @@ def getnewuserdetails():
     return username, password
 
 
-def endprogram():
-    pass
-
-
-def userlogin():
-    pass
-
-
-def decision_to_register():
+def register():
     register_continuation_validation = Validator("register")
-    return register_continuation_validation.validate_continuation()
+    continuation = bool(int(register_continuation_validation.validate_continuation()))
+    if continuation is True:
+        username, password = getnewuserdetails()
+        new_user = User(username, password)
+        new_user.register()
+    return False
 
 
-def decision_to_login():
+def login():
     login_continuation_validation = Validator("login")
-    return login_continuation_validation.validate_continuation()
+    continuation = bool(int(login_continuation_validation.validate_continuation()))
+    if continuation is True:
+        existing_user = User("", "")
+        username = existing_user.login()
+        if username is not None:
+            teacher_mainmenu(username)
+    return False
 
 
 def information():
-    pass
+    print("Currently no information available")
+    return False
 
 
 def exit_software():
-    pass
+    print("Exiting...")
+    return True
 
 
-mainmenu_dict = {'r': decision_to_register, 'l': decision_to_login, 'i': information, 'e': exit_software}
-registermenu_dict = {'0': endprogram, '1': getnewuserdetails}
-loginmenu_dict = {'0': endprogram, '1': userlogin}
+mainmenu_dict = {'r': register, 'l': login, 'i': information, 'e': exit_software}
 if __name__ == "__main__":
     print("Welcome to SafeMarks")
-    correct = 1
-    while correct == 1:
+    exit = False
+    while exit is False:
         mainmenu_decision = mainmenu()
-        continue_decision = mainmenu_dict[mainmenu_decision]()
-        if mainmenu_decision == "r":
-            username, password = registermenu_dict[continue_decision]()
-            NewUser = User(username, password)
-            NewUser.register()
-        elif mainmenu_decision == "l":
-            loginmenu_dict[continue_decision]()
-            login_not_complete = True
-            while login_not_complete:
-                username = input("Please enter your username:")
-                password = input("Please enter your password:")
-                CurrentUser = User(username, password)
-                login_not_complete = CurrentUser.login()
+        exit = mainmenu_dict[mainmenu_decision]()
