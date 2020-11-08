@@ -1,8 +1,9 @@
 from enum import Enum
 from Student import Student
-from StorageFunctions import StorageFunctions
 import time
 import random
+
+from helper_library.StorageFunctions import StorageFunctions
 
 
 class AllowedValuesMainMenu(Enum):

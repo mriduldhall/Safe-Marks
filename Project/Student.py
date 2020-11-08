@@ -1,6 +1,7 @@
 from enum import Enum
-from MarkSheet import _MarkSheet
-from StorageFunctions import StorageFunctions
+
+from helper_library.MarkSheet import _MarkSheet
+from helper_library.StorageFunctions import StorageFunctions
 
 
 class AllowedMarkSheetChoice(Enum):
