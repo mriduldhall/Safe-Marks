@@ -1,9 +1,10 @@
 # TODO Add checks so that incorrect responses does not kill run
 from enum import Enum
 from Student import Student
-from StorageFunctions import StorageFunctions
 import time
 import random
+
+from HelperLibrary.StorageFunctions import StorageFunctions
 
 
 class AllowedValuesMainMenu(Enum):
