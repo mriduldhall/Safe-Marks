@@ -1,3 +1,4 @@
+# TODO Add checks so that incorrect responses does not kill run
 from enum import Enum
 from Student import Student
 from StorageFunctions import StorageFunctions
@@ -62,6 +63,7 @@ def manage():
         if save_needed is True:
             student.savedata(student)
 
+    # FIXME Student does not exist raises error currently
     def validatename():
         getstudentlist()
         student_to_retrieve = input("Enter student name to manage student:").capitalize()

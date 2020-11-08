@@ -93,6 +93,7 @@ def mainmenu():
 
 
 def getnewuserdetails():
+    # TODO Password not visible
     username = input("Please enter your username:")
     username_validator = Validator("username")
     password = input("Please enter a password for you account:")
