@@ -1,8 +1,8 @@
 from enum import Enum
 
-from Project.Login import Login
-from Project.Registration import Registration
-from Project.User import User
+from User.Login import Login
+from User.Registration import Registration
+from User.User import User
 from Teacher import mainmenu as teacher_mainmenu
 
 
@@ -31,7 +31,7 @@ class Validator:
             except ValueError:
                 print("Enter valid choice (0, 1)")
             else:
-                return decision.value
+                return bool(int(decision.value))
 
 
 class ExitMenuItem:
@@ -41,7 +41,7 @@ class ExitMenuItem:
 
     def execute(self):
         print("Exiting...")
-        return self.is_exit_initiated
+        self.is_exit_initiated = True
 
     def exit_initiated(self):
         return self.is_exit_initiated
@@ -64,7 +64,7 @@ class RegisterMenuItem:
     def execute(self):
         if Validator("register").should_continue():
             user = self._get_new_user_details()
-            msg = Registration("/Users/priyank/Downloads/Safe-Marks/User.txt").register(user)
+            msg = Registration().register(user)
             print(msg)
 
         return False

@@ -1,5 +1,5 @@
 from HelperLibrary.StorageFunctions import StorageFunctions
-from Project.User import User
+from User.User import User
 
 
 class LoginStore:
@@ -27,7 +27,7 @@ class Login:
     does_not_exist = 2
     incorrect_credentials = 3
 
-    def __init__(self, login_store_file_path="/Users/priyank/Downloads/Safe-Marks/User.txt"):
+    def __init__(self, login_store_file_path="/Users/nitindhall/PycharmProjects/Programs/Project/Text Files/User.txt"):
         self.login_store = LoginStore(login_store_file_path)
 
     def validate_credentials(self, user):
