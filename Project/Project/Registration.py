@@ -1,4 +1,4 @@
-from helper_library.StorageFunctions import StorageFunctions
+from HelperLibrary.StorageFunctions import StorageFunctions
 
 
 class RegistrationStore:

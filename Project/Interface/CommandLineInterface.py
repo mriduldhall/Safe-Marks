@@ -1,8 +1,9 @@
 from enum import Enum
 
-from project.login import Login
-from project.registration import Registration
-from project.user import User
+from Project.Login import Login
+from Project.Registration import Registration
+from Project.User import User
+from Teacher import mainmenu as teacher_mainmenu
 
 
 class AllowedValuesReconformation(Enum):

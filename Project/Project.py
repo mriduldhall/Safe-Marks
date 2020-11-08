@@ -1,4 +1,4 @@
-from interface.command_line_interface import CLI
+from Interface.CommandLineInterface import CLI
 
 if __name__ == "__main__":
     CLI().initiate()
