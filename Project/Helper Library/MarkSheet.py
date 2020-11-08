@@ -9,22 +9,19 @@ class _MarkSheet:
         self.english_grade = english_grade
 
     def editmarksheet(self):
-
-        def stop():
-            return False
-
         continuation_check = True
         while continuation_check:
-            marksheeteditingvariables = {'1': "math_grade", '2': "science_grade", '3': "english_grade", '4': stop}
-            marksheeteditingstrings = {'1': "math", '2': "science", '3': "english"}
+            subject_list = ["math", "science", "english"]
             choice = input("Enter 1 if you would like to edit math grade, 2 to edit science grade, 3 to edit english grade and 4 to stop editing the mark sheet")
-            try:
-                continuation_check = marksheeteditingvariables[choice]()
-            except TypeError:
-                print("Current", marksheeteditingstrings[choice], "grade is", getattr(self, marksheeteditingvariables[choice]))
-                print("Enter new", marksheeteditingstrings[choice], "grade:", end='')
-                new_grade = input()
-                setattr(self, marksheeteditingvariables[choice], new_grade)
+            if (choice > str(len(subject_list)+1)) or (choice < "1"):
+                print("Enter valid choice!")
+            elif choice == str(len(subject_list)+1):
+                continuation_check = False
+            else:
+                print("Current", subject_list[int(choice)-1], "grade is", getattr(self, subject_list[int(choice)-1] + "_grade"))
+                print("Enter new", subject_list[int(choice)-1], "grade:", end='')
+                setattr(self, (subject_list[int(choice)-1] + "_grade"), input())
+        self.getmarks()
 
     def getdetails(self):
         print("Student name =", self.student)

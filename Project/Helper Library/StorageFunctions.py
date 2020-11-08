@@ -16,9 +16,9 @@ class StorageFunctions:
                 data = line.split('§')
                 string_check = data[position-1]
                 if string_check == self.data:
-                    return line, line_counter
+                    return str(line), int(line_counter)
                 line_counter += 1
-            return None
+            return None, None
         except EOFError:
             return None
 
@@ -40,9 +40,6 @@ class StorageFunctions:
             data_to_add = data[position-1]
             data_list.append(data_to_add)
         return data_list
-
-    def delete(self):
-        pass
 
 
 if __name__ == "__main__":
