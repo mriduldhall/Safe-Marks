@@ -1,37 +1,8 @@
-from enum import Enum
-
 from User.Login import Login
 from User.Registration import Registration
 from User.User import User
-from Teacher import mainmenu as teacher_mainmenu
-
-
-class AllowedValuesReconformation(Enum):
-    stop = "0"
-    resume = "1"
-
-
-class Validator:
-    def __init__(self, input_name):
-        self.type = input_name
-
-    def validate_separator(self, string):
-        if "§" in string:
-            print("The", self.type, "is not accepted as it contains '§' which is not accepted.\nPlease try again.")
-            return 1
-        else:
-            return 0
-
-    def should_continue(self):
-        while True:
-            try:
-                print("You have entered the", self.type, "section.")
-                decision = AllowedValuesReconformation(
-                    input("Do you want to continue?\nEnter 1 to continue or 0 to leave."))
-            except ValueError:
-                print("Enter valid choice (0, 1)")
-            else:
-                return bool(int(decision.value))
+from HelperLibrary.Validator import Validator
+from Interface.TeacherCommandLineInterface import CLI as teacher_CLI
 
 
 class ExitMenuItem:
@@ -118,7 +89,7 @@ class LoginMenuItem:
                     try_again = bool(int(input("Would you like to try again? Enter 1 to try again and 0 to exit.")))
 
             if logged_in_username is not None:
-                teacher_mainmenu(logged_in_username)
+                teacher_CLI(logged_in_username).initiate()
 
 
 class InformationMenuItem:
