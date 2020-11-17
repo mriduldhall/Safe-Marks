@@ -1,6 +1,6 @@
 # TODO Add checks so that incorrect responses does not kill run
 from enum import Enum
-from Student import Student
+from HelperLibrary.Student import Student
 import time
 import random
 

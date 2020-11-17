@@ -1,6 +1,10 @@
 from HelperLibrary.Validator import Validator
-from Student import Student
+from HelperLibrary.Student import Student
 from Teacher.Create import Create
+from Teacher.Manage import Manage
+from Interface.SettingsCommandLineInterface import CLI as SettingsCLI
+
+from HelperLibrary.Singleton import Singleton
 
 
 class LogoutMenuItem:
@@ -16,23 +20,31 @@ class LogoutMenuItem:
 
 
 class SettingsMenuItem:
-    def __init__(self):
-        pass
+    def __init__(self, singleton):
+        self.singleton = singleton
+        self.is_exit_initiated = False
 
     def execute(self):
-        pass
+        user_deleted = SettingsCLI(self.singleton).initiate()
+        if user_deleted:
+            self.is_exit_initiated = True
 
-    @staticmethod
-    def exit_initiated():
-        return False
+    def exit_initiated(self):
+        return self.is_exit_initiated
 
 
 class ManageMenuItem:
     def __init__(self):
         pass
 
-    def execute(self):
-        pass
+    @staticmethod
+    def execute():
+        if Validator("manage").should_continue():
+            work_on_new_student = True
+            while work_on_new_student:
+                message = Manage().manage()
+                print(message)
+                work_on_new_student = bool(int(input("Enter 1 to enter another name and work on another student or 0 to leave.")))
 
     @staticmethod
     def exit_initiated():
@@ -66,12 +78,11 @@ class CreateMenuItem:
 
 
 class CLI:
-    def __init__(self, name):
-        self.name = name
+    def __init__(self, singleton):
         self.mainmenudictionary = {
             "c": CreateMenuItem(),
             "m": ManageMenuItem(),
-            "s": SettingsMenuItem(),
+            "s": SettingsMenuItem(singleton),
             "l": LogoutMenuItem()
         }
 
@@ -88,5 +99,5 @@ class CLI:
 
 
 if __name__ == '__main__':
-    interface = CLI("admin")
+    interface = CLI(Singleton("admin"))
     interface.initiate()

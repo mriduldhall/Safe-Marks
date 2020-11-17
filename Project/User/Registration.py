@@ -24,6 +24,6 @@ class Registration:
     def register(self, user):
         if self.user_storage.user_does_not_exist(user.username):
             self.user_storage.add_user(user)
-            return "You have successfully created an account with the username", user.username
+            return "You have successfully created an account with the username" + user.username
         else:
             return "Username is already taken"

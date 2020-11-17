@@ -52,8 +52,8 @@ class Student:
 
     @staticmethod
     def savedata(student):
-        data, location = sortbyname(student.name)
-        DataUpdate = StorageFunctions("/Users/nitindhall/PycharmProjects/Programs/Project/Text Files/Student.txt", student.name + "§" + student.age + "§" + student.year_group + "§" + student.summer_mark_sheet.student + "§" + student.summer_mark_sheet.term + "§" + student.summer_mark_sheet.year_group + "§" + student.summer_mark_sheet.teacher + "§" + str(student.summer_mark_sheet.math_grade) + "§" + str(student.summer_mark_sheet.science_grade) + "§" + str(student.summer_mark_sheet.english_grade) + "§" + student.spring_mark_sheet.student + "§" + student.spring_mark_sheet.term + "§" + student.spring_mark_sheet.year_group + "§" + student.spring_mark_sheet.teacher + "§" + str(student.spring_mark_sheet.math_grade) + "§" + str(student.spring_mark_sheet.science_grade) + "§" + str(student.spring_mark_sheet.english_grade) + "§" + student.autumn_mark_sheet.student + "§" + student.autumn_mark_sheet.term + "§" + student.autumn_mark_sheet.year_group + "§" + student.autumn_mark_sheet.teacher + "§" + str(student.autumn_mark_sheet.math_grade) + "§" + str(student.autumn_mark_sheet.science_grade) + "§" + str(student.autumn_mark_sheet.english_grade) + "§\n")
+        data, location = sortbyname(student.singleton)
+        DataUpdate = StorageFunctions("/Users/nitindhall/PycharmProjects/Programs/Project/Text Files/Student.txt", student.singleton + "§" + student.age + "§" + student.year_group + "§" + student.summer_mark_sheet.student + "§" + student.summer_mark_sheet.term + "§" + student.summer_mark_sheet.year_group + "§" + student.summer_mark_sheet.teacher + "§" + str(student.summer_mark_sheet.math_grade) + "§" + str(student.summer_mark_sheet.science_grade) + "§" + str(student.summer_mark_sheet.english_grade) + "§" + student.spring_mark_sheet.student + "§" + student.spring_mark_sheet.term + "§" + student.spring_mark_sheet.year_group + "§" + student.spring_mark_sheet.teacher + "§" + str(student.spring_mark_sheet.math_grade) + "§" + str(student.spring_mark_sheet.science_grade) + "§" + str(student.spring_mark_sheet.english_grade) + "§" + student.autumn_mark_sheet.student + "§" + student.autumn_mark_sheet.term + "§" + student.autumn_mark_sheet.year_group + "§" + student.autumn_mark_sheet.teacher + "§" + str(student.autumn_mark_sheet.math_grade) + "§" + str(student.autumn_mark_sheet.science_grade) + "§" + str(student.autumn_mark_sheet.english_grade) + "§\n")
         DataUpdate.update(location)
 
     def deletestudent(self):
@@ -93,7 +93,7 @@ if __name__ == "__main__":
     # print(sortbyname("Mridul"))
     # del current_student
     # _Student.recreatestudent()
-    file = open("Text Files/Student.txt", "r+")
+    file = open("../Text Files/Student.txt", "r+")
     file.truncate(0)
     file.close()
     student1 = Student("Nitin", "41", "12", "Test")
