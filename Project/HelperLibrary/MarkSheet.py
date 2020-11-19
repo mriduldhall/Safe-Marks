@@ -34,9 +34,3 @@ class _MarkSheet:
         print("English marks =", self.science_grade)
         print("Science marks =", self.english_grade)
 
-
-if __name__ == "__main__":
-    mark_sheet = _MarkSheet("Mridul", "Summer term", "9", "Test")
-    mark_sheet.editmarksheet()
-    mark_sheet.getdetails()
-    mark_sheet.getmarks()

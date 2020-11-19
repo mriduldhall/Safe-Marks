@@ -1,4 +1,3 @@
-from HelperLibrary.Singleton import Singleton
 from Settings.EditPassword import EditPassword
 from Settings.DeleteAccount import Delete
 
@@ -86,7 +85,3 @@ class CLI:
             return True
         else:
             return None
-
-
-if __name__ == '__main__':
-    CLI(Singleton("admin")).initiate()

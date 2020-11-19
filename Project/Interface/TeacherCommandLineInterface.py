@@ -4,8 +4,6 @@ from Teacher.Create import Create
 from Teacher.Manage import Manage
 from Interface.SettingsCommandLineInterface import CLI as SettingsCLI
 
-from HelperLibrary.Singleton import Singleton
-
 
 class LogoutMenuItem:
     def __init__(self):
@@ -96,8 +94,3 @@ class CLI:
                 continue
             menu_item.execute()
             exit_initiated = menu_item.exit_initiated()
-
-
-if __name__ == '__main__':
-    interface = CLI(Singleton("admin"))
-    interface.initiate()

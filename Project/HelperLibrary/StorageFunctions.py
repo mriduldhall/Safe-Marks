@@ -40,14 +40,3 @@ class StorageFunctions:
             data_to_add = data[position-1]
             data_list.append(data_to_add)
         return data_list
-
-
-if __name__ == "__main__":
-    # obj = StorageFunctions("test.txt", "a\nb\nc\nd\ne\nf\ng\nh\ni\nj\nk")
-    # obj.append()
-    # obj2 = StorageFunctions("test.txt", "test\n")
-    # line_content, line_number = obj2.retrieve()
-    # print(line_content, "is located on line number", line_number)
-
-    obj3 = StorageFunctions("test.txt", "")
-    obj3.update(5)

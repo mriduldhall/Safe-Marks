@@ -82,26 +82,3 @@ def _choosemarksheet(activity):
             print("Please enter a valid choice")
         else:
             return mark_sheet_choice_dictionary[getattr(mark_sheet_choice, "value")]
-
-
-if __name__ == "__main__":
-    # current_student = _Student("Mridul", "14", "10")
-    # get_student_details(current_student)
-    # current_student.editmarksheet()
-    # get_mark_sheet_details(current_student)
-    # get_mark_sheet_marks(current_student)
-    # print(sortbyname("Mridul"))
-    # del current_student
-    # _Student.recreatestudent()
-    file = open("../Text Files/Student.txt", "r+")
-    file.truncate(0)
-    file.close()
-    student1 = Student("Nitin", "41", "12", "Test")
-    student2 = Student("Upma", "43", "11", "Test")
-    student3 = Student("Mridul", "14", "10", "Test")
-    student1.savestudentdata()
-    student2.savestudentdata()
-    student3.savestudentdata()
-    del student1, student2, student3
-    student_obj = Student.recreatestudent(input("Enter student name:"))
-    Student.savedata(student_obj)
