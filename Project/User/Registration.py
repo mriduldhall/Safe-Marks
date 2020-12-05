@@ -1,29 +1,28 @@
-from HelperLibrary.StorageFunctions import StorageFunctions
+from HelperLibrary.StorageFunctionsDatabase import StorageFunctions
 
 
 class RegistrationStore:
+    def __init__(self, table_name):
+        self.table_name = table_name
 
-    def __init__(self, file_path):
-        self.storage_file = file_path
-
-    def user_does_not_exist(self, username):
-        sf = StorageFunctions(self.storage_file, username)
-        data, location = sf.retrieve(1)
-        return data is None
+    def check_if_user_exists(self, username):
+        user_data = StorageFunctions(self.table_name).retrieve(["username"], [username])
+        if not user_data:
+            return False
+        else:
+            return True
 
     def add_user(self, user):
-        sf = StorageFunctions(self.storage_file, user.username + "§" + user.password + "§\n")
-        sf.append()
+        StorageFunctions(self.table_name).append("(username, password)", [user.username, user.password])
 
 
 class Registration:
-
-    def __init__(self, user_storage_path="/Users/nitindhall/PycharmProjects/Programs/Project/Text Files/User.txt"):
-        self.user_storage = RegistrationStore(user_storage_path)
+    def __init__(self, user_table_name="users"):
+        self.user_storage = RegistrationStore(user_table_name)
 
     def register(self, user):
-        if self.user_storage.user_does_not_exist(user.username):
+        if not self.user_storage.check_if_user_exists(user.username):
             self.user_storage.add_user(user)
-            return "You have successfully created an account with the username" + user.username
+            return "You have successfully created an account with the username " + user.username
         else:
             return "Username is already taken"

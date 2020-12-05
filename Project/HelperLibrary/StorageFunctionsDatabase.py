@@ -3,10 +3,9 @@ from psycopg2 import OperationalError
 
 
 class StorageFunctions:
-    def __init__(self, table_name, data, db_name="safe_marks", db_user="postgres", db_password="mt9j3f-D9eW.gfrV", db_host="127.0.0.1", db_port="5432"):
+    def __init__(self, table_name, db_name="safe_marks", db_user="postgres", db_password="mt9j3f-D9eW.gfrV", db_host="127.0.0.1", db_port="5432"):
         self.connection = self._createconnection(db_name, db_user, db_password, db_host, db_port)
         self.table = table_name
-        self.data = data
 
     @staticmethod
     def _createconnection(db_name, db_user, db_password, db_host, db_port):
@@ -17,39 +16,60 @@ class StorageFunctions:
             print("The error", error, "occurred")
         return connection
 
-    def executequery(self, query, fetching=False):
+    def _executequery(self, query, data, fetching=False):
         self.connection.autocommit = True
         cursor = self.connection.cursor()
         try:
-            cursor.execute(query, self.data)
+            cursor.execute(query, data)
             if fetching:
                 result = cursor.fetchall()
-                return result[0]
+                return result
         except OperationalError as error:
             print("The error", error, "occurred")
 
-    def append(self):
-        data_records = ", ".join(["%s"] * len(self.data))
-        query = f"INSERT INTO " + self.table + f" (username, password) VALUES {data_records}"
-        self.executequery(query, fetching=False)
+    def append(self, list_of_values, data):
+        data_records = ", ".join(["%s"] * len(data))
+        query = f"INSERT INTO " + self.table + f" " + list_of_values + f" VALUES ({data_records})"
+        self._executequery(query, data, fetching=False)
 
     def list(self, item):
         query = f"SELECT " + item + f" FROM " + self.table
-        data = self.executequery(query, fetching=True)
-        return list(data)
+        data = self._executequery(query, data=None, fetching=True)
+        data_list = []
+        for data_item in data:
+            data_list.append(data_item[0])
+        return data_list
 
-    def retrieve(self, item):
-        query = f"SELECT * FROM " + self.table + " WHERE " + item + f" = '" + self.data + "'"
-        data = self.executequery(query, fetching=True)
-        return list(data)
+    def retrieve(self, column_list, data_list):
+        query_condition = self.formquerycondition(column_list, data_list, False)
+        query = f"SELECT * FROM " + self.table + " WHERE " + query_condition
+        data_list = self._executequery(query, data=None, fetching=True)
+        return list(data_list)
 
-    def update(self, item, id, identifier="id"):
-        query = f"UPDATE " + self.table + " SET " + item + " = '" + self.data + "' WHERE " + identifier + " = " + id
-        self.executequery(query, fetching=False)
+    def update(self, column_list, data_list, id, identifier="id"):
+        query_condition = self.formquerycondition(column_list, data_list, True)
+        query = f"UPDATE " + self.table + " SET " + query_condition + " WHERE " + identifier + " = " + str(id)
+        self._executequery(query, data=None, fetching=False)
 
-    def delete(self, id, identifier="id"):
-        query = f"DELETE FROM " + self.table + " WHERE " + identifier + " = " + str(id)
-        self.executequery(query, fetching=False)
+    @staticmethod
+    def formquerycondition(column_list, data_list, updating=False):
+        assert len(column_list) == len(data_list), "Columns list and data list do not match"
+        query_condition = ""
+        for counter in range(len(column_list)):
+            query_condition = query_condition + column_list[counter] + " = '" + str(data_list[counter]) + "'"
+            if updating:
+                query_condition = query_condition + ", "
+            else:
+                query_condition = query_condition + " AND "
+        if updating:
+            query_condition = query_condition[:-2]
+        else:
+            query_condition = query_condition[:-5]
+        return query_condition
+
+    def delete(self, data, identifier="id"):
+        query = f"DELETE FROM " + self.table + " WHERE " + identifier + " = " + str(data)
+        self._executequery(query, data=None, fetching=False)
 
 
 if __name__ == '__main__':
@@ -60,14 +80,14 @@ if __name__ == '__main__':
     # username = input("Enter a username:")
     # password = input("Enter a password:")
     # user_data = [(username, password)]
-    # StorageFunctions("test", user_data).append()
+    # StorageFunctions("test", user_data).append("(username, password)")
 
     # LIST TEST CASE
-    # data = StorageFunctions("test", None).list("username")
+    # data = StorageFunctions("test").list("username")
     # print(data)
 
     # RETRIEVE TEST CASE
-    # data = StorageFunctions("test", "admin").retrieve("username")
+    # data = StorageFunctions("test").retrieve("username", "admin")
     # print(data)
 
     # UPDATE TEST CASE
@@ -78,5 +98,11 @@ if __name__ == '__main__':
     # data = StorageFunctions("test", username).retrieve("username")
     # id = data[0]
     # StorageFunctions("test", None).delete(id)
+
+    # UPDATE NEW TEST CASE
+    # StorageFunctions("mark_sheets").update(["teacher", "math_mark", "science_mark", "english_mark"], 9, ["admin", 0, 0, 0])
+
+    # RETRIEVE TEST CASE
+    # print(StorageFunctions("mark_sheets").retrieve(["student_id", "term_id", "year_group_id"], [3, 3, 10]))
 
     pass

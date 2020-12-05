@@ -20,7 +20,7 @@ class DeleteMenuItem:
         self.is_exit_initiated = False
 
     def execute(self):
-        confirm_continuation = bool(int(input("Enter 1 to change your password and 0 to exit:")))
+        confirm_continuation = bool(int(input("Enter 1 to delete your account and 0 to exit:")))
         if confirm_continuation:
             try_again = True
             while try_again:

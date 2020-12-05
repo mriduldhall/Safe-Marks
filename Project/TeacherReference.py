@@ -4,7 +4,7 @@ from HelperLibrary.Student import Student
 import time
 import random
 
-from HelperLibrary.StorageFunctions import StorageFunctions
+from HelperLibrary.StorageFunctionsFiles import StorageFunctions
 
 
 class AllowedValuesMainMenu(Enum):

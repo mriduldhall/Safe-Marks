@@ -1,38 +1,38 @@
-from HelperLibrary.StorageFunctions import StorageFunctions
+from HelperLibrary.StorageFunctionsDatabase import StorageFunctions as StorageFunctionsDatabase
 
 
 class EditPasswordStore:
-    def __init__(self, user_data_storage_path, username):
-        self.user_file = user_data_storage_path
+    def __init__(self, table_name, username):
+        self.table_name = table_name
         self.username = username
 
-    def confirmpassword(self, confirm_password):
-        data, location = StorageFunctions(self.user_file, confirm_password).retrieve(2)
-        if data is not None:
-            return True, location
+    def confirmpassword(self, password):
+        user_data = StorageFunctionsDatabase(self.table_name).retrieve(["password"], [password])
+        if not user_data:
+            return False, None
         else:
-            return False, location
+            return True, (user_data[0])[0]
 
-    def changepassword(self, password, location):
-        StorageFunctions(self.user_file, self.username + "§" + password + "§\n").update(location)
+    def changepassword(self, password, id):
+        StorageFunctionsDatabase(self.table_name).update(["password"], [password], id)
 
 
 class EditPassword:
     successful = 1
     failed = 2
 
-    def __init__(self, singleton,  user_data_storage_path="/Users/nitindhall/PycharmProjects/Programs/Project/Text Files/User.txt"):
-        self.edit_password_module = EditPasswordStore(user_data_storage_path, singleton.name)
+    def __init__(self, singleton, users_table_name="users"):
+        self.edit_password_module = EditPasswordStore(users_table_name, singleton.name)
 
     def editpassword(self, confirm_password, new_password, confirm_new_password):
-        result, location = self.edit_password_module.confirmpassword(confirm_password)
+        result, id = self.edit_password_module.confirmpassword(confirm_password)
         if result:
             if new_password == confirm_new_password:
-                self.edit_password_module.changepassword(new_password, location)
+                self.edit_password_module.changepassword(new_password, id)
                 message = "Password successfully changed"
                 return message, self.successful
             else:
-                message = "Incorrect re=entered password"
+                message = "Incorrect re-entered password"
                 return message, self.failed
         else:
             message = "Password is incorrect!"

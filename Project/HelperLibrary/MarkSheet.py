@@ -33,4 +33,3 @@ class _MarkSheet:
         print("Maths marks =", self.math_grade)
         print("English marks =", self.science_grade)
         print("Science marks =", self.english_grade)
-

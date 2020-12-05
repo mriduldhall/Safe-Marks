@@ -97,6 +97,7 @@ class LoginMenuItem:
             if logged_in_username is not None:
                 singleton = Singleton(logged_in_username)
                 teacher_CLI(singleton).initiate()
+                singleton.reset()
 
 
 class InformationMenuItem:

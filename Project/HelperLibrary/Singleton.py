@@ -13,3 +13,7 @@ class Singleton:
         else:
             self.name = name
             Singleton.__instance = self.name
+
+    @staticmethod
+    def reset():
+        Singleton.__instance = None

@@ -1,33 +1,33 @@
-from HelperLibrary.StorageFunctions import StorageFunctions
+from HelperLibrary.StorageFunctionsDatabase import StorageFunctions as StorageFunctionsDatabase
 
 
 class DeleteStore:
-    def __init__(self, user_data_storage_path, singleton):
-        self.user_file = user_data_storage_path
+    def __init__(self, table_name, singleton):
+        self.table_name = table_name
         self.username = singleton.name
 
     def confirmpassword(self, password):
-        data, location = StorageFunctions(self.user_file, password).retrieve(2)
-        if data is not None:
-            return True, location
+        user_data = StorageFunctionsDatabase(self.table_name).retrieve(["password"], [password])
+        if not user_data:
+            return False, None
         else:
-            return False, location
+            return True, (user_data[0])[0]
 
-    def delete_user(self, location):
-        StorageFunctions(self.user_file, "").update(location)
+    def delete_user(self, id):
+        StorageFunctionsDatabase(self.table_name).delete(id)
 
 
 class Delete:
     successful = 1
     failed = 2
 
-    def __init__(self, singleton, user_data_storage_path="/Users/nitindhall/PycharmProjects/Programs/Project/Text Files/User.txt"):
-        self.delete_module = DeleteStore(user_data_storage_path, singleton)
+    def __init__(self, singleton, users_table_name="users"):
+        self.delete_module = DeleteStore(users_table_name, singleton)
 
     def delete(self, password):
-        result, location = self.delete_module.confirmpassword(password)
+        result, id = self.delete_module.confirmpassword(password)
         if result:
-            self.delete_module.delete_user(location)
+            self.delete_module.delete_user(id)
             message = "Account successfully deleted!\nRedirecting to main page..."
             return message, self.successful
         else:
