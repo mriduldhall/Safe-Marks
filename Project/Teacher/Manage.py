@@ -1,4 +1,4 @@
-from HelperLibrary.StorageFunctionsDatabase import StorageFunctions
+from HelperLibrary.StorageFunctions import StorageFunctions
 from HelperLibrary.Student import Student
 from Interface.StudentCommandLineInterface import CLI
 
@@ -8,12 +8,6 @@ class ManageStore:
         self.table_name = table_name
 
     def validate_if_student_exists(self, name):
-        # student_data = StorageFunctions(self.table_name, name)
-        # data, location = student_data.retrieve(1)
-        # if data is None:
-        #     return False
-        # else:
-        #     return True
         student_data = StorageFunctions(self.table_name).retrieve(["name"], [name])
         if not student_data:
             return False
@@ -21,13 +15,6 @@ class ManageStore:
             return True
 
     def list_students(self):
-        # student_data = StorageFunctions(self.table_name, None)
-        # list_of_students = student_data.list(1)
-        # print("List of students:")
-        # counter = 1
-        # for student_name in sorted(list_of_students):
-        #     print(counter, ":", student_name, end="\n")
-        #     counter += 1
         list_of_students = StorageFunctions(self.table_name).list("name")
         print("List of students:")
         counter = 1

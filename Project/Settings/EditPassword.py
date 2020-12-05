@@ -1,4 +1,4 @@
-from HelperLibrary.StorageFunctionsDatabase import StorageFunctions as StorageFunctionsDatabase
+from HelperLibrary.StorageFunctions import StorageFunctions
 
 
 class EditPasswordStore:
@@ -7,14 +7,14 @@ class EditPasswordStore:
         self.username = username
 
     def confirmpassword(self, password):
-        user_data = StorageFunctionsDatabase(self.table_name).retrieve(["password"], [password])
+        user_data = StorageFunctions(self.table_name).retrieve(["password"], [password])
         if not user_data:
             return False, None
         else:
             return True, (user_data[0])[0]
 
     def changepassword(self, password, id):
-        StorageFunctionsDatabase(self.table_name).update(["password"], [password], id)
+        StorageFunctions(self.table_name).update(["password"], [password], id)
 
 
 class EditPassword:

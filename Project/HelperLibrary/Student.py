@@ -1,7 +1,7 @@
 from enum import Enum
 
 from HelperLibrary.MarkSheet import _MarkSheet
-from HelperLibrary.StorageFunctionsDatabase import StorageFunctions
+from HelperLibrary.StorageFunctions import StorageFunctions
 
 
 class AllowedMarkSheetChoice(Enum):
@@ -22,12 +22,6 @@ class Student:
 
     @classmethod
     def recreatestudent(cls, name):
-        # student_data = retrievedata(name)
-        # student = Student(student_data.split('§')[0], student_data.split('§')[1], student_data.split('§')[2], student_data.split('§')[6])
-        # student.summer_mark_sheet = _MarkSheet(student_data.split('§')[3], student_data.split('§')[4], student_data.split('§')[5], student_data.split('§')[6], student_data.split('§')[7], student_data.split('§')[8], student_data.split('§')[9])
-        # student.spring_mark_sheet = _MarkSheet(student_data.split('§')[10], student_data.split('§')[11], student_data.split('§')[12], student_data.split('§')[13], student_data.split('§')[14], student_data.split('§')[15], student_data.split('§')[16])
-        # student.autumn_mark_sheet = _MarkSheet(student_data.split('§')[17], student_data.split('§')[18], student_data.split('§')[19], student_data.split('§')[20], student_data.split('§')[21], student_data.split('§')[22], student_data.split('§')[23])
-        # return student
         student_data = retrievedata(name)
         student = Student(student_data[0], student_data[1], student_data[2], student_data[4])
         student.summer_mark_sheet = _MarkSheet(student.name, student_data[3], student.year_group, student_data[4], student_data[5], student_data[6], student_data[7])
@@ -40,15 +34,6 @@ class Student:
         self.__getattribute__(mark_sheet_choice.lower() + "_mark_sheet").editmarksheet()
 
     def savestudentdata(self):
-        # DataStorage = StorageFunctionsDatabase("/Users/nitindhall/PycharmProjects/Programs/Project/Text Files/Student.txt", self.name + "§" + self.age + "§" + self.year_group + "§" + self.summer_mark_sheet.student + "§" + self.summer_mark_sheet.term + "§" + self.summer_mark_sheet.year_group + "§" + self.summer_mark_sheet.teacher + "§" + str(self.summer_mark_sheet.math_grade) + "§" + str(self.summer_mark_sheet.science_grade) + "§" + str(self.summer_mark_sheet.english_grade) + "§" + self.spring_mark_sheet.student + "§" + self.spring_mark_sheet.term + "§" + self.spring_mark_sheet.year_group + "§" + self.spring_mark_sheet.teacher + "§" + str(self.spring_mark_sheet.math_grade) + "§" + str(self.spring_mark_sheet.science_grade) + "§" + str(self.spring_mark_sheet.english_grade) + "§" + self.autumn_mark_sheet.student + "§" + self.autumn_mark_sheet.term + "§" + self.autumn_mark_sheet.year_group + "§" + self.autumn_mark_sheet.teacher + "§" + str(self.autumn_mark_sheet.math_grade) + "§" + str(self.autumn_mark_sheet.science_grade) + "§" + str(self.autumn_mark_sheet.english_grade) + "§\n")
-        # DataStorage.append()
-
-        # StorageFunctionsDatabase("students", [self.name, self.age, self.year_group]).append("(name, age, current_year_group)")
-        # student_data = StorageFunctionsDatabase("students", self.name).retrieve("name")
-        # StorageFunctionsDatabase("mark_sheets", [self.summer_mark_sheet.teacher, self.summer_mark_sheet.math_grade, self.summer_mark_sheet.science_grade, self.summer_mark_sheet.english_grade, student_data[0], StorageFunctionsDatabase("terms", "Summer").retrieve("term"), self.year_group]).append("(teacher, math_mark, science_mark, english_mark, student_id, term_id, year_group_id)")
-        # StorageFunctionsDatabase("mark_sheets", [self.spring_mark_sheet.teacher, self.spring_mark_sheet.math_grade, self.spring_mark_sheet.science_grade, self.spring_mark_sheet.english_grade, student_data[0], StorageFunctionsDatabase("terms", "Spring").retrieve("term"), self.year_group]).append("(teacher, math_mark, science_mark, english_mark, student_id, term_id, year_group_id)")
-        # StorageFunctionsDatabase("mark_sheets", [self.autumn_mark_sheet.teacher, self.autumn_mark_sheet.math_grade, self.autumn_mark_sheet.science_grade, self.autumn_mark_sheet.english_grade, student_data[0], StorageFunctionsDatabase("terms", "Autumn").retrieve("term"), self.year_group]).append("(teacher, math_mark, science_mark, english_mark, student_id, term_id, year_group_id)")
-
         student_data = StorageFunctions("students").retrieve(["name"], [self.name])
         student_id = (student_data[0])[0]
         StorageFunctions("students").update(["name", "age"], [self.name, self.age], student_id)
@@ -74,11 +59,6 @@ class Student:
         _MarkSheet.getmarks(getattr(self, mark_sheet_choice.lower() + "_mark_sheet"))
 
     def deletestudent(self):
-        # data, location = retrievedata(self.name)
-        # Delete = StorageFunctions("/Users/nitindhall/PycharmProjects/Programs/Project/Text Files/Student.txt", "")
-        # Delete.update(location)
-        # print(self.name, "successfully deleted!")
-        # return True, False
         student_data = StorageFunctions("students").retrieve(["name"], [self.name])
         student_id = (student_data[0])[0]
         StorageFunctions("mark_sheets").delete(student_id, "student_id")
@@ -86,12 +66,6 @@ class Student:
 
 
 def retrievedata(name):
-    # name = name.lower()
-    # name = name.capitalize()
-    # SearchingName = StorageFunctions("/Users/nitindhall/PycharmProjects/Programs/Project/Text Files/Student.txt", name)
-    # data, location = SearchingName.retrieve(1)
-    # return data, location
-
     name = (name.lower()).capitalize()
     student_data = StorageFunctions("students").retrieve(["name"], [name])
     student_data = list(student_data[0])

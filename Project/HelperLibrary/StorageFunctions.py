@@ -70,39 +70,3 @@ class StorageFunctions:
     def delete(self, data, identifier="id"):
         query = f"DELETE FROM " + self.table + " WHERE " + identifier + " = " + str(data)
         self._executequery(query, data=None, fetching=False)
-
-
-if __name__ == '__main__':
-    # create_test_table = """CREATE TABLE IF NOT EXISTS test (id SERIAL PRIMARY KEY, username TEXT NOT NULL, password TEXT NOT NULL)"""
-    # StorageFunctions("test2", None).executequery(create_test_table)
-
-    # APPEND TEST CASE
-    # username = input("Enter a username:")
-    # password = input("Enter a password:")
-    # user_data = [(username, password)]
-    # StorageFunctions("test", user_data).append("(username, password)")
-
-    # LIST TEST CASE
-    # data = StorageFunctions("test").list("username")
-    # print(data)
-
-    # RETRIEVE TEST CASE
-    # data = StorageFunctions("test").retrieve("username", "admin")
-    # print(data)
-
-    # UPDATE TEST CASE
-    # StorageFunctions("test", "test").update("username", "7")
-
-    # DELETE TEST CASE
-    # username = input("Enter a username:")
-    # data = StorageFunctions("test", username).retrieve("username")
-    # id = data[0]
-    # StorageFunctions("test", None).delete(id)
-
-    # UPDATE NEW TEST CASE
-    # StorageFunctions("mark_sheets").update(["teacher", "math_mark", "science_mark", "english_mark"], 9, ["admin", 0, 0, 0])
-
-    # RETRIEVE TEST CASE
-    # print(StorageFunctions("mark_sheets").retrieve(["student_id", "term_id", "year_group_id"], [3, 3, 10]))
-
-    pass

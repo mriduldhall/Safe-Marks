@@ -1,4 +1,4 @@
-from HelperLibrary.StorageFunctionsDatabase import StorageFunctions as StorageFunctionsDatabase
+from HelperLibrary.StorageFunctions import StorageFunctions
 
 
 class DeleteStore:
@@ -7,14 +7,14 @@ class DeleteStore:
         self.username = singleton.name
 
     def confirmpassword(self, password):
-        user_data = StorageFunctionsDatabase(self.table_name).retrieve(["password"], [password])
+        user_data = StorageFunctions(self.table_name).retrieve(["password"], [password])
         if not user_data:
             return False, None
         else:
             return True, (user_data[0])[0]
 
     def delete_user(self, id):
-        StorageFunctionsDatabase(self.table_name).delete(id)
+        StorageFunctions(self.table_name).delete(id)
 
 
 class Delete:

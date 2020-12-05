@@ -1,4 +1,4 @@
-from HelperLibrary.StorageFunctionsDatabase import StorageFunctions
+from HelperLibrary.StorageFunctions import StorageFunctions
 from User.User import User
 
 
