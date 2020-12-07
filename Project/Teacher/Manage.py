@@ -1,3 +1,6 @@
+# TODO Move manage and create into a new class called Student that has these methods and is supported by
+# TODO student module class that can be used to validate student exists, save data etc. Support CRUD
+
 from HelperLibrary.StorageFunctions import StorageFunctions
 from HelperLibrary.Student import Student
 from Interface.StudentCommandLineInterface import CLI

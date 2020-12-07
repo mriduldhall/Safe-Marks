@@ -21,6 +21,7 @@ class CreateStore:
         StorageFunctions("mark_sheets").append("(teacher, math_mark, science_mark, english_mark, student_id, term_id, year_group_id)", [student.autumn_mark_sheet.teacher, student.autumn_mark_sheet.math_grade, student.autumn_mark_sheet.science_grade, student.autumn_mark_sheet.english_grade, student_data[0], (StorageFunctions("terms").retrieve(["term"], ["Autumn"])[0])[0], student.year_group])
 
 
+
 class Create:
     def __init__(self, student_table_name="students"):
         self.create_module = CreateStore(student_table_name)
