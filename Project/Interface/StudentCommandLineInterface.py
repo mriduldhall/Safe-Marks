@@ -27,4 +27,4 @@ class CLI:
                 exit_condition = False
                 valid_input = True
         if save_needed is True:
-            self.student.savedata(self.student)
+            self.student.savestudentdata()
