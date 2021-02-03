@@ -74,18 +74,28 @@ class CreateMenuItem:
 
 class CLI:
     def __init__(self, singleton):
-        self.mainmenudictionary = {
+        self.main_menu_dictionary = {
+            "m": ManageMenuItem(),
+            "s": SettingsMenuItem(singleton),
+            "l": LogoutMenuItem()
+        }
+        self.admin_main_menu_dictionary = {
             "c": CreateMenuItem(singleton),
             "m": ManageMenuItem(),
             "s": SettingsMenuItem(singleton),
             "l": LogoutMenuItem()
         }
+        self.admin = singleton.admin
 
     def initiate(self):
         exit_initiated = False
         while not exit_initiated:
-            choice = input("Enter c to create new students, m to manage students and their mark sheets, s for settings and l to logout")
-            menu_item = self.mainmenudictionary.get(choice)
+            if not self.admin:
+                choice = input("Enter m to manage students and their mark sheets, s for settings and l to logout:")
+                menu_item = self.main_menu_dictionary.get(choice)
+            else:
+                choice = input("Enter c to create new students, m to manage students and their mark sheets, s for settings and l to logout:")
+                menu_item = self.admin_main_menu_dictionary.get(choice)
             if menu_item is None:
                 print("Please enter valid choice")
                 continue
