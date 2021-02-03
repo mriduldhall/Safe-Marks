@@ -55,7 +55,7 @@ class RegisterMenuItem:
             username_validator = Validator("username")
             password = input("Please enter a password for your account:")
             password_validator = Validator("password")
-        return User(username, password)
+        return User(username, password, False)
 
 
 class LoginMenuItem:
@@ -79,9 +79,7 @@ class LoginMenuItem:
             while (logged_in is False) and (try_again is True):
                 username = input("Enter your username:")
                 password = input("Enter your password:")
-
-                login_result = self.login_module.validate_credentials(User(username, password))
-
+                login_result, admin = self.login_module.validate_credentials(User(username, password, None))
                 if login_result == Login.logged_in:
                     print("Successfully logged in")
                     logged_in = True
@@ -93,9 +91,8 @@ class LoginMenuItem:
                 else:
                     print("Incorrect username and/or password")
                     try_again = bool(int(input("Would you like to try again? Enter 1 to try again and 0 to exit.")))
-
             if logged_in_username is not None:
-                singleton = Singleton(logged_in_username)
+                singleton = Singleton(logged_in_username, admin)
                 teacher_CLI(singleton).initiate()
                 singleton.reset()
 

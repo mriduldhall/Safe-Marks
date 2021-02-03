@@ -12,7 +12,7 @@ class LoginStore:
         if not user_data:
             return None
         elif (user_data[0])[1] == username:
-            return User((user_data[0])[1], (user_data[0])[2])
+            return User((user_data[0])[1], (user_data[0])[2], (user_data[0])[3])
         else:
             return False
 
@@ -30,6 +30,6 @@ class Login:
         if stored_user is None:
             return self.does_not_exist
         elif stored_user.password == user.password:
-            return self.logged_in
+            return self.logged_in, stored_user.admin
         else:
             return self.incorrect_credentials

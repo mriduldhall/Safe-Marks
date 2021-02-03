@@ -13,7 +13,7 @@ class RegistrationStore:
             return True
 
     def add_user(self, user):
-        StorageFunctions(self.table_name).append("(username, password)", [user.username, user.password])
+        StorageFunctions(self.table_name).append("(username, password, admin)", [user.username, user.password, user.admin])
 
 
 class Registration:
