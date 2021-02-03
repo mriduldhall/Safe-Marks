@@ -30,15 +30,14 @@ class SettingsMenuItem:
 
 
 class ManageMenuItem:
-    def __init__(self):
-        pass
+    def __init__(self, admin):
+        self.admin = admin
 
-    @staticmethod
-    def execute():
+    def execute(self):
         if Validator("manage").should_continue():
             work_on_new_student = True
             while work_on_new_student:
-                message = Student(None, None, None, None).manage()
+                message = Student(None, None, None, None).manage(self.admin)
                 print(message)
                 work_on_new_student = bool(int(input("Enter 1 to enter another name and work on another student or 0 to leave.")))
 
@@ -75,13 +74,13 @@ class CreateMenuItem:
 class CLI:
     def __init__(self, singleton):
         self.main_menu_dictionary = {
-            "m": ManageMenuItem(),
+            "m": ManageMenuItem(singleton.admin),
             "s": SettingsMenuItem(singleton),
             "l": LogoutMenuItem()
         }
         self.admin_main_menu_dictionary = {
             "c": CreateMenuItem(singleton),
-            "m": ManageMenuItem(),
+            "m": ManageMenuItem(singleton.admin),
             "s": SettingsMenuItem(singleton),
             "l": LogoutMenuItem()
         }

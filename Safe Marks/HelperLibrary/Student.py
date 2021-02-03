@@ -102,7 +102,17 @@ class Student:
         self.spring_mark_sheet = MarkSheet(self.name, "Spring", self.year_group, teacher)
         self.autumn_mark_sheet = MarkSheet(self.name, "Spring", self.year_group, teacher)
         self.student_controller = StudentController(self, table_name)
-        self.studentmenu_dict = {'1': self.student_controller.editmarksheet, '2': self.student_controller.getstudentdetails, '3': self.student_controller.getmarksheetdetails, '4': self.student_controller.getmarksheetmarks, '5': self.delete}
+        self.student_menu_dict = {'1': self.student_controller.editmarksheet,
+                                  '2': self.student_controller.getstudentdetails,
+                                  '3': self.student_controller.getmarksheetdetails,
+                                  '4': self.student_controller.getmarksheetmarks,
+                                  }
+        self.admin_student_menu_dict = {'1': self.student_controller.editmarksheet,
+                                        '2': self.student_controller.getstudentdetails,
+                                        '3': self.student_controller.getmarksheetdetails,
+                                        '4': self.student_controller.getmarksheetmarks,
+                                        '5': self.delete,
+                                        }
 
     def recreatestudent(self):
         student_data = self.student_controller.retrievedata()
@@ -138,14 +148,14 @@ class Student:
         else:
             return "Student already exists"
 
-    def manage(self):
+    def manage(self, admin):
         choice_list_of_students = bool(int(input("Enter 1 to get a list of all students and 0 to continue without a list of students:")))
         if choice_list_of_students:
             self.student_controller.list_students()
         self.name = input("Enter student name to manage student:").capitalize()
         if self.student_controller.validate_if_student_exists():
             self.recreatestudent()
-            CLI(self).initiate()
+            CLI(self, admin).initiate()
             return "Exiting..."
         else:
             return "Student does not exist"
