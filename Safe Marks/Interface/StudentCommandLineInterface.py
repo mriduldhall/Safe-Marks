@@ -14,7 +14,7 @@ class CLI:
                 exit_condition = True
                 valid_input = True
             elif student_menu_choice == str(len(self.student.studentmenu_dict)):
-                self.student.studentmenu_dict[student_menu_choice](self.student)
+                self.student.studentmenu_dict[student_menu_choice]()
                 exit_condition = True
                 valid_input = True
                 save_needed = False
@@ -23,8 +23,8 @@ class CLI:
                 valid_input = False
                 exit_condition = False
             else:
-                self.student.studentmenu_dict[student_menu_choice](self.student)
+                self.student.studentmenu_dict[student_menu_choice]()
                 exit_condition = False
                 valid_input = True
         if save_needed is True:
-            self.student.savestudentdata()
+            self.student.student_controller.savestudentdata()

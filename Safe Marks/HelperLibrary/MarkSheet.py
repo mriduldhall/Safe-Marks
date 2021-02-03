@@ -1,4 +1,4 @@
-class _MarkSheet:
+class MarkSheet:
     def __init__(self, student, term, year_group, teacher, math_grade=0, science_grade=0, english_grade=0):
         self.student = student
         self.term = term
