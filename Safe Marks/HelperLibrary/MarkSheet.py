@@ -1,4 +1,4 @@
-class _MarkSheet:
+class MarkSheet:
     def __init__(self, student, term, year_group, teacher, math_grade=0, science_grade=0, english_grade=0):
         self.student = student
         self.term = term
@@ -33,10 +33,3 @@ class _MarkSheet:
         print("Maths marks =", self.math_grade)
         print("English marks =", self.science_grade)
         print("Science marks =", self.english_grade)
-
-
-if __name__ == "__main__":
-    mark_sheet = _MarkSheet("Mridul", "Summer term", "9", "Test")
-    mark_sheet.editmarksheet()
-    mark_sheet.getdetails()
-    mark_sheet.getmarks()

@@ -1,37 +1,9 @@
-from enum import Enum
-
 from User.Login import Login
 from User.Registration import Registration
 from User.User import User
-from Teacher import mainmenu as teacher_mainmenu
-
-
-class AllowedValuesReconformation(Enum):
-    stop = "0"
-    resume = "1"
-
-
-class Validator:
-    def __init__(self, input_name):
-        self.type = input_name
-
-    def validate_separator(self, string):
-        if "§" in string:
-            print("The", self.type, "is not accepted as it contains '§' which is not accepted.\nPlease try again.")
-            return 1
-        else:
-            return 0
-
-    def should_continue(self):
-        while True:
-            try:
-                print("You have entered the", self.type, "section.")
-                decision = AllowedValuesReconformation(
-                    input("Do you want to continue?\nEnter 1 to continue or 0 to leave."))
-            except ValueError:
-                print("Enter valid choice (0, 1)")
-            else:
-                return bool(int(decision.value))
+from HelperLibrary.Validator import Validator
+from HelperLibrary.Singleton import Singleton
+from Interface.TeacherCommandLineInterface import CLI as teacher_CLI
 
 
 class ExitMenuItem:
@@ -46,7 +18,8 @@ class ExitMenuItem:
     def exit_initiated(self):
         return self.is_exit_initiated
 
-    def name(self):
+    @staticmethod
+    def name():
         return "Exit program (e)"
 
 
@@ -55,10 +28,12 @@ class RegisterMenuItem:
     def __init__(self):
         pass
 
-    def name(self):
+    @staticmethod
+    def name():
         return "Register User (r)"
 
-    def exit_initiated(self):
+    @staticmethod
+    def exit_initiated():
         return False
 
     def execute(self):
@@ -69,7 +44,8 @@ class RegisterMenuItem:
 
         return False
 
-    def _get_new_user_details(self):
+    @staticmethod
+    def _get_new_user_details():
         username = input("Please enter your username:")
         username_validator = Validator("username")
         password = input("Please enter a password for you account:")
@@ -79,19 +55,20 @@ class RegisterMenuItem:
             username_validator = Validator("username")
             password = input("Please enter a password for your account:")
             password_validator = Validator("password")
-        return User(username, password)
+        return User(username, password, False)
 
 
 class LoginMenuItem:
 
     def __init__(self, login_module=Login()):
         self.login_module = login_module
-        pass
 
-    def name(self):
+    @staticmethod
+    def name():
         return "Login user (l)"
 
-    def exit_initiated(self):
+    @staticmethod
+    def exit_initiated():
         return False
 
     def execute(self):
@@ -102,9 +79,7 @@ class LoginMenuItem:
             while (logged_in is False) and (try_again is True):
                 username = input("Enter your username:")
                 password = input("Enter your password:")
-
-                login_result = self.login_module.validate_credentials(User(username, password))
-
+                login_result, admin = self.login_module.validate_credentials(User(username, password, None))
                 if login_result == Login.logged_in:
                     print("Successfully logged in")
                     logged_in = True
@@ -116,9 +91,10 @@ class LoginMenuItem:
                 else:
                     print("Incorrect username and/or password")
                     try_again = bool(int(input("Would you like to try again? Enter 1 to try again and 0 to exit.")))
-
             if logged_in_username is not None:
-                teacher_mainmenu(logged_in_username)
+                singleton = Singleton(logged_in_username, admin)
+                teacher_CLI(singleton).initiate()
+                singleton.reset()
 
 
 class InformationMenuItem:
@@ -126,14 +102,17 @@ class InformationMenuItem:
     def __init__(self):
         pass
 
-    def execute(self):
+    @staticmethod
+    def execute():
         print("Currently no information available")
         return False
 
-    def name(self):
+    @staticmethod
+    def name():
         return "Information (i)"
 
-    def exit_initiated(self):
+    @staticmethod
+    def exit_initiated():
         return False
 
 
@@ -148,6 +127,7 @@ class CLI:
         }
 
     def initiate(self):
+        print("Welcome to Safe Marks")
         exit_initiated = False
 
         while not exit_initiated:
