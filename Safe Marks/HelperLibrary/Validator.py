@@ -10,13 +10,6 @@ class Validator:
     def __init__(self, input_name):
         self.type = input_name
 
-    def validate_separator(self, string):
-        if "§" in string:
-            print("The", self.type, "is not accepted as it contains '§' which is not accepted.\nPlease try again.")
-            return 1
-        else:
-            return 0
-
     def should_continue(self):
         while True:
             try:

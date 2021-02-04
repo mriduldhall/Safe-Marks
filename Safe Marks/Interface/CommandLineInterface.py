@@ -47,14 +47,7 @@ class RegisterMenuItem:
     @staticmethod
     def _get_new_user_details():
         username = (input("Please enter your username:")).capitalize()
-        username_validator = Validator("username")
         password = input("Please enter a password for you account:")
-        password_validator = Validator("password")
-        while username_validator.validate_separator(username) or password_validator.validate_separator(password) == 1:
-            username = input("Please enter your username:")
-            username_validator = Validator("username")
-            password = input("Please enter a password for your account:")
-            password_validator = Validator("password")
         return User(username, password, False)
 
 
