@@ -46,7 +46,7 @@ class RegisterMenuItem:
 
     @staticmethod
     def _get_new_user_details():
-        username = input("Please enter your username:")
+        username = (input("Please enter your username:")).capitalize()
         username_validator = Validator("username")
         password = input("Please enter a password for you account:")
         password_validator = Validator("password")
@@ -77,7 +77,7 @@ class LoginMenuItem:
             try_again = True
             logged_in_username = None
             while (logged_in is False) and (try_again is True):
-                username = input("Enter your username:")
+                username = (input("Enter your username:")).capitalize()
                 password = input("Enter your password:")
                 login_result, admin = self.login_module.validate_credentials(User(username, password, None))
                 if login_result == Login.logged_in:

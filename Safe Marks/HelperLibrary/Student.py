@@ -2,7 +2,7 @@ from Interface.StudentCommandLineInterface import CLI
 from HelperLibrary.StorageFunctions import StorageFunctions
 from HelperLibrary.MarkSheet import MarkSheet
 
-from datetime import datetime, timedelta
+from datetime import datetime
 
 
 class StudentController:
@@ -41,7 +41,7 @@ class StudentController:
             counter += 1
 
     def create_student(self):
-        StorageFunctions(self.table_name).append("(name, age, current_year_group)", [self.student.name, self.student.age, self.student.year_group])
+        StorageFunctions(self.table_name).append("(name, age, current_year_group, date_of_birth, address, father_name, mother_name)", [self.student.name, self.student.age, self.student.year_group, self.student.date_of_birth, self.student.address, self.student.father_name, self.student.mother_name])
         student_data = StorageFunctions(self.table_name).retrieve(["name"], [self.student.name])
         student_data = student_data[0]
         StorageFunctions("mark_sheets").append("(teacher, math_mark, science_mark, english_mark, student_id, term_id, year_group_id)", [self.student.summer_mark_sheet.teacher, self.student.summer_mark_sheet.math_grade, self.student.summer_mark_sheet.science_grade, self.student.summer_mark_sheet.english_grade, student_data[0], (StorageFunctions("terms").retrieve(["term"], ["Summer"])[0])[0], self.student.year_group])
@@ -50,16 +50,15 @@ class StudentController:
 
     def validate_student_details(self):
         if self.student.age < 1:
-            return "Invalid age!"
+            return False, "Invalid age!"
         elif self.student.year_group < 1:
             self.student.year_group = 1
-            return "Age too low!\nSetting year group to 1"
+            return True, "Age too low!\nSetting year group to 1"
         elif self.student.year_group > 13:
             self.student.year_group = 13
-            return "Age too high!\nSetting year group to 13"
+            return True, "Age too high!\nSetting year group to 13"
         else:
-            return None
-
+            return True, None
 
     @staticmethod
     def _choosemarksheet(activity):
@@ -111,9 +110,9 @@ class StudentController:
 class Student:
     def __init__(self, name, date_of_birth, address, father_name, mother_name, teacher, table_name="students"):
         self.name = name
-        self.age = datetime.now() - date_of_birth.year
+        self.age = (datetime.now()).year - date_of_birth.year
         self.year_group = self.age - 5
-        self.birth_date = date_of_birth
+        self.date_of_birth = date_of_birth
         self.address = address
         self.father_name = father_name
         self.mother_name = mother_name

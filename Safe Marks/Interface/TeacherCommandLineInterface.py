@@ -77,10 +77,8 @@ class CreateMenuItem:
             father_name = input("Enter student's father's name:")
             mother_name = input("Enter student's mother's name:")
             student = Student(name, date_of_birth, address, father_name, mother_name, teacher=self.singleton.name)
-            message = student.student_controller.validate_student_details()
-            if not message:
-                valid = True
-            else:
+            valid, message = student.student_controller.validate_student_details()
+            if message:
                 print(message)
         return student
 
