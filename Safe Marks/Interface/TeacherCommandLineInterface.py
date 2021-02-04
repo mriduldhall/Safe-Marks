@@ -2,6 +2,8 @@ from HelperLibrary.Validator import Validator
 from HelperLibrary.Student import Student
 from Interface.SettingsCommandLineInterface import CLI as SettingsCLI
 
+from datetime import datetime
+
 
 class LogoutMenuItem:
     def __init__(self):
@@ -67,9 +69,14 @@ class CreateMenuItem:
         valid = False
         while not valid:
             name = input("Enter student's name:").capitalize()
-            age = input("Enter student's age:")
-            year_group = input("Enter student's year group:")
-            student = Student(name, age, year_group, teacher=self.singleton.name)
+            birth_year = int(input("Enter student's year of birth:"))
+            birth_month = int(input("Enter student's month of birth:"))
+            birth_date = int(input("Enter student's date of birth:"))
+            date_of_birth = datetime(birth_year, birth_month, birth_date)
+            address = input("Enter student's address:")
+            father_name = input("Enter student's father's name:")
+            mother_name = input("Enter student's mother's name:")
+            student = Student(name, date_of_birth, address, father_name, mother_name, teacher=self.singleton.name)
             message = student.student_controller.validate_student_details()
             if not message:
                 valid = True

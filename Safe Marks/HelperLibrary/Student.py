@@ -109,11 +109,11 @@ class StudentController:
 
 
 class Student:
-    def __init__(self, name, birth_date, address, father_name, mother_name, teacher, table_name="students"):
+    def __init__(self, name, date_of_birth, address, father_name, mother_name, teacher, table_name="students"):
         self.name = name
-        self.age = datetime.now() - birth_date.year
+        self.age = datetime.now() - date_of_birth.year
         self.year_group = self.age - 5
-        self.birth_date = birth_date
+        self.birth_date = date_of_birth
         self.address = address
         self.father_name = father_name
         self.mother_name = mother_name
