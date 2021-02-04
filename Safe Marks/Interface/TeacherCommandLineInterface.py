@@ -39,7 +39,7 @@ class ManageMenuItem:
         if Validator("manage").should_continue():
             work_on_new_student = True
             while work_on_new_student:
-                message = Student(None, None, None, None).manage(self.admin)
+                message = Student(None, None, None, None, None, None).manage(self.admin)
                 print(message)
                 work_on_new_student = bool(int(input("Enter 1 to enter another name and work on another student or 0 to leave.")))
 

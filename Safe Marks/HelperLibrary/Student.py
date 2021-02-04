@@ -23,6 +23,7 @@ class StudentController:
             term_data = StorageFunctions("terms").retrieve(["id"], [term_id])
             term = [(term_data[0])[1]]
             student_data = student_data + term + list((mark_sheet_data[0])[1:5])
+        print(student_data)
         return student_data
 
     def validate_if_student_exists(self):
@@ -79,6 +80,10 @@ class StudentController:
         print("Student name:", self.student.name)
         print("Student age:", self.student.age)
         print("Student year group:", self.student.year_group)
+        print("Student date of birth:", self.student.date_of_birth)
+        print("Student address:", self.student.address)
+        print("Student father's name:", self.student.father_name)
+        print("Student mother's name:", self.student.mother_name)
 
     def getmarksheetdetails(self):
         mark_sheet_choice = self._choosemarksheet("get details of")
@@ -91,7 +96,7 @@ class StudentController:
     def savestudentdata(self):
         student_data = StorageFunctions("students").retrieve(["name"], [self.student.name])
         student_id = (student_data[0])[0]
-        StorageFunctions("students").update(["name", "age"], [self.student.name, self.student.age], student_id)
+        StorageFunctions("students").update(["name", "age", "current_year_group", "date_of_birth", "address", "father_name", "mother_name"], [self.student.name, self.student.age, self.student.year_group, self.student.date_of_birth, self.student.address, self.student.father_name, self.student.mother_name], student_id)
         term_id_list = StorageFunctions("terms").list("id")
         for term_id in term_id_list:
             mark_sheet_data = StorageFunctions("mark_sheets").retrieve(["student_id", "term_id", "year_group_id"], [student_id, term_id, self.student.year_group])
@@ -110,8 +115,12 @@ class StudentController:
 class Student:
     def __init__(self, name, date_of_birth, address, father_name, mother_name, teacher, table_name="students"):
         self.name = name
-        self.age = (datetime.now()).year - date_of_birth.year
-        self.year_group = self.age - 5
+        if date_of_birth is not None:
+            self.age = (datetime.now()).year - date_of_birth.year
+            self.year_group = self.age - 5
+        else:
+            self.age = None
+            self.year_group = None
         self.date_of_birth = date_of_birth
         self.address = address
         self.father_name = father_name
@@ -137,27 +146,31 @@ class Student:
         self.name = student_data[0]
         self.age = student_data[1]
         self.year_group = student_data[2]
+        self.date_of_birth = student_data[3]
+        self.address = student_data[4]
+        self.father_name = student_data[5]
+        self.mother_name = student_data[6]
         self.summer_mark_sheet.student = self.name
-        self.summer_mark_sheet.term = student_data[3]
+        self.summer_mark_sheet.term = student_data[7]
         self.summer_mark_sheet.year_group = self.year_group
-        self.summer_mark_sheet.teacher = student_data[4]
-        self.summer_mark_sheet.math_grade = student_data[5]
-        self.summer_mark_sheet.science_grade = student_data[6]
-        self.summer_mark_sheet.english_grade = student_data[7]
+        self.summer_mark_sheet.teacher = student_data[8]
+        self.summer_mark_sheet.math_grade = student_data[9]
+        self.summer_mark_sheet.science_grade = student_data[10]
+        self.summer_mark_sheet.english_grade = student_data[11]
         self.spring_mark_sheet.student = self.name
-        self.spring_mark_sheet.term = student_data[8]
+        self.spring_mark_sheet.term = student_data[12]
         self.spring_mark_sheet.year_group = self.year_group
-        self.spring_mark_sheet.teacher = student_data[9]
-        self.spring_mark_sheet.math_grade = student_data[10]
-        self.spring_mark_sheet.science_grade = student_data[11]
-        self.spring_mark_sheet.english_grade = student_data[12]
+        self.spring_mark_sheet.teacher = student_data[13]
+        self.spring_mark_sheet.math_grade = student_data[14]
+        self.spring_mark_sheet.science_grade = student_data[15]
+        self.spring_mark_sheet.english_grade = student_data[16]
         self.autumn_mark_sheet.student = self.name
-        self.autumn_mark_sheet.term = student_data[13]
+        self.autumn_mark_sheet.term = student_data[17]
         self.autumn_mark_sheet.year_group = self.year_group
-        self.autumn_mark_sheet.teacher = student_data[14]
-        self.autumn_mark_sheet.math_grade = student_data[15]
-        self.autumn_mark_sheet.science_grade = student_data[16]
-        self.autumn_mark_sheet.english_grade = student_data[17]
+        self.autumn_mark_sheet.teacher = student_data[18]
+        self.autumn_mark_sheet.math_grade = student_data[19]
+        self.autumn_mark_sheet.science_grade = student_data[20]
+        self.autumn_mark_sheet.english_grade = student_data[21]
 
     def create(self):
         if not self.student_controller.validate_if_student_exists():
