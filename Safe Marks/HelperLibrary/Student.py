@@ -48,6 +48,19 @@ class StudentController:
         StorageFunctions("mark_sheets").append("(teacher, math_mark, science_mark, english_mark, student_id, term_id, year_group_id)", [self.student.spring_mark_sheet.teacher, self.student.spring_mark_sheet.math_grade, self.student.spring_mark_sheet.science_grade, self.student.spring_mark_sheet.english_grade, student_data[0], (StorageFunctions("terms").retrieve(["term"], ["Spring"])[0])[0], self.student.year_group])
         StorageFunctions("mark_sheets").append("(teacher, math_mark, science_mark, english_mark, student_id, term_id, year_group_id)", [self.student.autumn_mark_sheet.teacher, self.student.autumn_mark_sheet.math_grade, self.student.autumn_mark_sheet.science_grade, self.student.autumn_mark_sheet.english_grade, student_data[0], (StorageFunctions("terms").retrieve(["term"], ["Autumn"])[0])[0], self.student.year_group])
 
+    def validate_student_details(self):
+        if self.student.age < 1:
+            return "Invalid age!"
+        elif self.student.year_group < 1:
+            self.student.year_group = 1
+            return "Age too low!\nSetting year group to 1"
+        elif self.student.year_group > 13:
+            self.student.year_group = 13
+            return "Age too high!\nSetting year group to 13"
+        else:
+            return None
+
+
     @staticmethod
     def _choosemarksheet(activity):
         mark_sheet_choice_dictionary = {'1': 'Summer', '2': 'Spring', '3': 'Autumn'}

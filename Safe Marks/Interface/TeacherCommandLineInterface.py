@@ -64,10 +64,17 @@ class CreateMenuItem:
         return False
 
     def getstudentdetails(self):
-        name = input("Enter student's name:").capitalize()
-        age = input("Enter student's age:")
-        year_group = input("Enter student's year group:")
-        student = Student(name, age, year_group, teacher=self.singleton.name)
+        valid = False
+        while not valid:
+            name = input("Enter student's name:").capitalize()
+            age = input("Enter student's age:")
+            year_group = input("Enter student's year group:")
+            student = Student(name, age, year_group, teacher=self.singleton.name)
+            message = student.student_controller.validate_student_details()
+            if not message:
+                valid = True
+            else:
+                print(message)
         return student
 
 
