@@ -2,6 +2,8 @@ from Interface.StudentCommandLineInterface import CLI
 from HelperLibrary.StorageFunctions import StorageFunctions
 from HelperLibrary.MarkSheet import MarkSheet
 
+from datetime import datetime, timedelta
+
 
 class StudentController:
     def __init__(self, student, table_name):
@@ -94,10 +96,14 @@ class StudentController:
 
 
 class Student:
-    def __init__(self, name, age, year_group, teacher, table_name="students"):
+    def __init__(self, name, birth_date, address, father_name, mother_name, teacher, table_name="students"):
         self.name = name
-        self.age = age
-        self.year_group = year_group
+        self.age = datetime.now() - birth_date.year
+        self.year_group = self.age - 5
+        self.birth_date = birth_date
+        self.address = address
+        self.father_name = father_name
+        self.mother_name = mother_name
         self.summer_mark_sheet = MarkSheet(self.name, "Summer", self.year_group, teacher)
         self.spring_mark_sheet = MarkSheet(self.name, "Spring", self.year_group, teacher)
         self.autumn_mark_sheet = MarkSheet(self.name, "Spring", self.year_group, teacher)
