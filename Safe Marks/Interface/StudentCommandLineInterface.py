@@ -13,7 +13,7 @@ class CLI:
                 student_menu_choice = input("Enter 1 to edit marks of the student, 2 to get student details, 3 to get mark sheet details, 4 to get marks, 5 to leave this menu:")
                 student_menu_dict = self.student.student_menu_dict
             else:
-                student_menu_choice = input("Enter 1 to edit marks of the student, 2 to get student details, 3 to get mark sheet details, 4 to get marks, 5 to delete student 6 to leave this menu:")
+                student_menu_choice = input("Enter 1 to edit marks of the student, 2 to get student details, 3 to get mark sheet details, 4 to get marks, 5 to edit student details, 6 to delete student 7 to leave this menu:")
                 student_menu_dict = self.student.admin_student_menu_dict
             if student_menu_choice == str(len(student_menu_dict) + 1):
                 exit_condition = True

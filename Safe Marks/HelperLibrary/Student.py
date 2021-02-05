@@ -23,7 +23,6 @@ class StudentController:
             term_data = StorageFunctions("terms").retrieve(["id"], [term_id])
             term = [(term_data[0])[1]]
             student_data = student_data + term + list((mark_sheet_data[0])[1:5])
-        print(student_data)
         return student_data
 
     def validate_if_student_exists(self):
@@ -72,10 +71,6 @@ class StudentController:
             else:
                 return mark_sheet_choice
 
-    def editmarksheet(self):
-        mark_sheet_choice = self._choosemarksheet("edit")
-        self.student.__getattribute__(mark_sheet_choice.lower() + "_mark_sheet").editmarksheet()
-
     def getstudentdetails(self):
         print("Student name:", self.student.name)
         print("Student age:", self.student.age)
@@ -93,8 +88,70 @@ class StudentController:
         mark_sheet_choice = self._choosemarksheet("get marks of")
         MarkSheet.getmarks(getattr(self.student, mark_sheet_choice.lower() + "_mark_sheet"))
 
-    def savestudentdata(self):
-        student_data = StorageFunctions("students").retrieve(["name"], [self.student.name])
+    def editmarksheet(self):
+        mark_sheet_choice = self._choosemarksheet("edit")
+        self.student.__getattribute__(mark_sheet_choice.lower() + "_mark_sheet").editmarksheet()
+
+    def edit_student_details(self):
+        attributes = {
+            '1': self.edit_name,
+            '2': self.edit_date_of_birth,
+            '3': self.edit_address,
+            '4': self.edit_father_name,
+            '5': self.edit_mother_name,
+        }
+        exit_initiated = False
+        while not exit_initiated:
+            edit_option = input("Enter 1 to edit name, 2 to edit date of birth, 3 to edit address, 4 to edit father name, 5 to edit mother name and 6 to exit:")
+            if edit_option == str(len(attributes) + 1):
+                exit_initiated = True
+            elif (edit_option > str(len(attributes) + 1)) or (edit_option < '1'):
+                print("Please enter a valid choice!")
+            else:
+                attributes.get(edit_option)()
+
+    def edit_name(self):
+        valid_name = False
+        while not valid_name:
+            original_name = self.student.name
+            print("Student's current name is", self.student.name)
+            self.student.name = input("Enter new name for student:")
+            if not self.validate_if_student_exists():
+                valid_name = True
+                self.savestudentdata(original_name)
+            else:
+                print("Student already exists!")
+                self.student.name = original_name
+
+    def edit_year_group(self):
+        print("Student's current year group is", self.student.year_group)
+        self.student.year_group = int(input("Enter new year_group for student:"))
+
+    def edit_date_of_birth(self):
+        print("Student's current date of birth is", self.student.date_of_birth)
+        birth_year = int(input("Enter new year of birth:"))
+        birth_month = int(input("Enter new month of birth:"))
+        birth_date = int(input("Enter new date of birth:"))
+        self.student.date_of_birth = datetime(birth_year, birth_month, birth_date)
+        self.student.age = self.student.calculate_age()
+
+    def edit_address(self):
+        print("Student's current address is", self.student.address)
+        self.student.address = input("Enter new address of student:")
+
+    def edit_father_name(self):
+        print("Student's father's current name is", self.student.father_name)
+        self.student.father_name = input("Enter new name for student's father:")
+
+    def edit_mother_name(self):
+        print("Student's father's current name is", self.student.mother_name)
+        self.student.mother_name = input("Enter new name for student's mother:")
+
+    def savestudentdata(self, old_name=None):
+        if not old_name:
+            student_data = StorageFunctions("students").retrieve(["name"], [self.student.name])
+        else:
+            student_data = StorageFunctions("students").retrieve(["name"], [old_name])
         student_id = (student_data[0])[0]
         StorageFunctions("students").update(["name", "age", "current_year_group", "date_of_birth", "address", "father_name", "mother_name"], [self.student.name, self.student.age, self.student.year_group, self.student.date_of_birth, self.student.address, self.student.father_name, self.student.mother_name], student_id)
         term_id_list = StorageFunctions("terms").list("id")
@@ -116,8 +173,8 @@ class Student:
     def __init__(self, name, date_of_birth, address, father_name, mother_name, teacher, table_name="students"):
         self.name = name
         if date_of_birth is not None:
-            self.age = (datetime.now()).year - date_of_birth.year
-            self.year_group = self.age - 5
+            self.age = self.calculate_age()
+            self.year_group = self.age - 4
         else:
             self.age = None
             self.year_group = None
@@ -138,7 +195,8 @@ class Student:
                                         '2': self.student_controller.getstudentdetails,
                                         '3': self.student_controller.getmarksheetdetails,
                                         '4': self.student_controller.getmarksheetmarks,
-                                        '5': self.delete,
+                                        '5': self.student_controller.edit_student_details,
+                                        '6': self.delete,
                                         }
 
     def recreatestudent(self):
@@ -171,6 +229,15 @@ class Student:
         self.autumn_mark_sheet.math_grade = student_data[19]
         self.autumn_mark_sheet.science_grade = student_data[20]
         self.autumn_mark_sheet.english_grade = student_data[21]
+
+    def calculate_age(self):
+        current_date = datetime.now()
+        age = current_date.year - self.date_of_birth.year
+        if current_date.month < self.date_of_birth.month:
+            age -= 1
+        elif current_date.day < self.date_of_birth.day:
+            age -= 1
+        return age
 
     def create(self):
         if not self.student_controller.validate_if_student_exists():
