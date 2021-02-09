@@ -56,7 +56,10 @@ class StorageFunctions:
         assert len(column_list) == len(data_list), "Columns list and data list do not match"
         query_condition = ""
         for counter in range(len(column_list)):
-            query_condition = query_condition + column_list[counter] + " = '" + str(data_list[counter]) + "'"
+            if data_list[counter] is not None:
+                query_condition = query_condition + column_list[counter] + " = '" + str(data_list[counter]) + "'"
+            else:
+                query_condition = query_condition + column_list[counter] + " = null"
             if updating:
                 query_condition = query_condition + ", "
             else:

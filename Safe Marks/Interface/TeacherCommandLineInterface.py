@@ -1,5 +1,6 @@
 from HelperLibrary.Validator import Validator
 from HelperLibrary.Student import Student
+from HelperLibrary.StorageFunctions import StorageFunctions
 from Interface.SettingsCommandLineInterface import CLI as SettingsCLI
 
 from datetime import datetime
@@ -29,6 +30,37 @@ class SettingsMenuItem:
 
     def exit_initiated(self):
         return self.is_exit_initiated
+
+
+class YearEndMenuItem:
+    def __init__(self, singleton):
+        self.name = singleton.name
+
+    def execute(self):
+        if Validator("year end").should_continue():
+            student_list = self.get_student_list()
+            self.increase_year(student_list)
+
+    @staticmethod
+    def get_student_list():
+        student_list = StorageFunctions("students").list("name")
+        return student_list
+
+    def increase_year(self, student_list):
+        for student_name in student_list:
+            student = Student(student_name, None, None, None, None, None)
+            student.recreatestudent()
+            if student.year_group != 13:
+                student.year_group += 1
+                student.student_controller.savestudentdata(save_mark_sheet_data=False)
+                student.student_controller.create_mark_sheets(self.name)
+            else:
+                student.year_group = None
+                student.student_controller.savestudentdata(save_mark_sheet_data=False)
+
+    @staticmethod
+    def exit_initiated():
+        return False
 
 
 class ManageMenuItem:
@@ -93,6 +125,7 @@ class CLI:
         self.admin_main_menu_dictionary = {
             "c": CreateMenuItem(singleton),
             "m": ManageMenuItem(singleton.admin),
+            "y": YearEndMenuItem(singleton),
             "s": SettingsMenuItem(singleton),
             "l": LogoutMenuItem()
         }
@@ -105,7 +138,7 @@ class CLI:
                 choice = input("Enter m to manage students and their mark sheets, s for settings and l to logout:")
                 menu_item = self.main_menu_dictionary.get(choice)
             else:
-                choice = input("Enter c to create new students, m to manage students and their mark sheets, s for settings and l to logout:")
+                choice = input("Enter c to create new students, m to manage students and their mark sheets, y to change academic year, s for settings and l to logout:")
                 menu_item = self.admin_main_menu_dictionary.get(choice)
             if menu_item is None:
                 print("Please enter valid choice")
