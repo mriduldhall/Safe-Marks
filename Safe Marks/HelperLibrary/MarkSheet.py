@@ -1,9 +1,8 @@
 class MarkSheet:
-    def __init__(self, student, term, year_group, teacher, math_grade=0, science_grade=0, english_grade=0):
+    def __init__(self, student, term, year_group, math_grade=0, science_grade=0, english_grade=0):
         self.student = student
         self.term = term
         self.year_group = year_group
-        self.teacher = teacher
         self.math_grade = math_grade
         self.science_grade = science_grade
         self.english_grade = english_grade
@@ -27,7 +26,6 @@ class MarkSheet:
         print("Student name =", self.student)
         print("Term =", self.term)
         print("Year group =", self.year_group)
-        print("Teacher name =", self.teacher)
 
     def getmarks(self):
         print("Maths marks =", self.math_grade)

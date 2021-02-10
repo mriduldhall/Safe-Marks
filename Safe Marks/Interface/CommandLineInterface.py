@@ -128,7 +128,7 @@ class CLI:
                 "Enter r to register a teacher account, l to login or i to get more information.\nEnter e to exit the software.")
             menu_item = self.mainmenu_dict.get(choice)
             if menu_item is None:
-                print("Enter valid choice (l,r, i, e)")
+                print("Enter valid choice")
                 continue
 
             menu_item.execute()

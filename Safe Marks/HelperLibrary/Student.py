@@ -22,7 +22,7 @@ class StudentController:
             mark_sheet_data = StorageFunctions("mark_sheets").retrieve(["student_id", "term_id", "year_group_id"], [student_id, term_id, year_group_id])
             term_data = StorageFunctions("terms").retrieve(["id"], [term_id])
             term = [(term_data[0])[1]]
-            student_data = student_data + term + list((mark_sheet_data[0])[1:5])
+            student_data = student_data + term + list((mark_sheet_data[0])[1:4])
         return student_data
 
     def validate_if_student_exists(self):
@@ -44,17 +44,17 @@ class StudentController:
         StorageFunctions(self.table_name).append("(name, age, current_year_group, date_of_birth, address, father_name, mother_name)", [self.student.name, self.student.age, self.student.year_group, self.student.date_of_birth, self.student.address, self.student.father_name, self.student.mother_name])
         student_data = StorageFunctions(self.table_name).retrieve(["name"], [self.student.name])
         student_data = student_data[0]
-        StorageFunctions("mark_sheets").append("(teacher, math_mark, science_mark, english_mark, student_id, term_id, year_group_id)", [self.student.summer_mark_sheet.teacher, self.student.summer_mark_sheet.math_grade, self.student.summer_mark_sheet.science_grade, self.student.summer_mark_sheet.english_grade, student_data[0], (StorageFunctions("terms").retrieve(["term"], ["Summer"])[0])[0], self.student.year_group])
-        StorageFunctions("mark_sheets").append("(teacher, math_mark, science_mark, english_mark, student_id, term_id, year_group_id)", [self.student.spring_mark_sheet.teacher, self.student.spring_mark_sheet.math_grade, self.student.spring_mark_sheet.science_grade, self.student.spring_mark_sheet.english_grade, student_data[0], (StorageFunctions("terms").retrieve(["term"], ["Spring"])[0])[0], self.student.year_group])
-        StorageFunctions("mark_sheets").append("(teacher, math_mark, science_mark, english_mark, student_id, term_id, year_group_id)", [self.student.autumn_mark_sheet.teacher, self.student.autumn_mark_sheet.math_grade, self.student.autumn_mark_sheet.science_grade, self.student.autumn_mark_sheet.english_grade, student_data[0], (StorageFunctions("terms").retrieve(["term"], ["Autumn"])[0])[0], self.student.year_group])
+        StorageFunctions("mark_sheets").append("(math_mark, science_mark, english_mark, student_id, term_id, year_group_id)", [self.student.summer_mark_sheet.math_grade, self.student.summer_mark_sheet.science_grade, self.student.summer_mark_sheet.english_grade, student_data[0], (StorageFunctions("terms").retrieve(["term"], ["Summer"])[0])[0], self.student.year_group])
+        StorageFunctions("mark_sheets").append("(math_mark, science_mark, english_mark, student_id, term_id, year_group_id)", [self.student.spring_mark_sheet.math_grade, self.student.spring_mark_sheet.science_grade, self.student.spring_mark_sheet.english_grade, student_data[0], (StorageFunctions("terms").retrieve(["term"], ["Spring"])[0])[0], self.student.year_group])
+        StorageFunctions("mark_sheets").append("(math_mark, science_mark, english_mark, student_id, term_id, year_group_id)", [self.student.autumn_mark_sheet.math_grade, self.student.autumn_mark_sheet.science_grade, self.student.autumn_mark_sheet.english_grade, student_data[0], (StorageFunctions("terms").retrieve(["term"], ["Autumn"])[0])[0], self.student.year_group])
 
-    def create_mark_sheets(self, teacher):
+    def create_mark_sheets(self):
         student_id = StorageFunctions("students").retrieve(["name"], [self.student.name])[0][0]
         term_id_list = StorageFunctions("terms").list("id")
         for term_id in term_id_list:
             mark_sheets_data = StorageFunctions("mark_sheets").retrieve(["student_id", "term_id", "year_group_id"], [student_id, term_id, self.student.year_group])
             if not mark_sheets_data:
-                StorageFunctions("mark_sheets").append("(teacher, math_mark, science_mark, english_mark, student_id, term_id, year_group_id)", [teacher, 0, 0, 0, student_id, term_id, self.student.year_group])
+                StorageFunctions("mark_sheets").append("(math_mark, science_mark, english_mark, student_id, term_id, year_group_id)", [0, 0, 0, student_id, term_id, self.student.year_group])
 
     def validate_student_details(self):
         if self.student.age < 1:
@@ -103,14 +103,15 @@ class StudentController:
     def edit_student_details(self):
         attributes = {
             '1': self.edit_name,
-            '2': self.edit_date_of_birth,
-            '3': self.edit_address,
-            '4': self.edit_father_name,
-            '5': self.edit_mother_name,
+            '2': self.edit_year_group,
+            '3': self.edit_date_of_birth,
+            '4': self.edit_address,
+            '5': self.edit_father_name,
+            '6': self.edit_mother_name,
         }
         exit_initiated = False
         while not exit_initiated:
-            edit_option = input("Enter 1 to edit name, 2 to edit date of birth, 3 to edit address, 4 to edit father name, 5 to edit mother name and 6 to exit:")
+            edit_option = input("Enter 1 to edit name, 2 to edit year group, 3 to edit date of birth, 4 to edit address, 5 to edit father name, 6 to edit mother name and 7 to exit:")
             if edit_option == str(len(attributes) + 1):
                 exit_initiated = True
             elif (edit_option > str(len(attributes) + 1)) or (edit_option < '1'):
@@ -169,7 +170,7 @@ class StudentController:
                 mark_sheet_id = (mark_sheet_data[0])[0]
                 term_data = StorageFunctions("terms").retrieve(["id"], [term_id])
                 term = (term_data[0])[1]
-                StorageFunctions("mark_sheets").update(["teacher", "math_mark", "science_mark", "english_mark"], [getattr(self.student, term.lower() + "_mark_sheet").teacher, getattr(self.student, term.lower() + "_mark_sheet").math_grade, getattr(self.student, term.lower() + "_mark_sheet").science_grade, getattr(self.student, term.lower() + "_mark_sheet").english_grade], mark_sheet_id)
+                StorageFunctions("mark_sheets").update(["math_mark", "science_mark", "english_mark"], [getattr(self.student, term.lower() + "_mark_sheet").math_grade, getattr(self.student, term.lower() + "_mark_sheet").science_grade, getattr(self.student, term.lower() + "_mark_sheet").english_grade], mark_sheet_id)
 
     def deletestudent(self):
         student_data = StorageFunctions("students").retrieve(["name"], [self.student.name])
@@ -179,21 +180,21 @@ class StudentController:
 
 
 class Student:
-    def __init__(self, name, date_of_birth, address, father_name, mother_name, teacher, table_name="students"):
+    def __init__(self, name, date_of_birth, address, father_name, mother_name, table_name="students"):
         self.name = name
-        if date_of_birth is not None:
+        self.date_of_birth = date_of_birth
+        if self.date_of_birth is not None:
             self.age = self.calculate_age()
             self.year_group = (StorageFunctions("year_groups").retrieve(["year_group"], [self.age-4])[0])[0]
         else:
             self.age = None
             self.year_group = None
-        self.date_of_birth = date_of_birth
         self.address = address
         self.father_name = father_name
         self.mother_name = mother_name
-        self.summer_mark_sheet = MarkSheet(self.name, "Summer", self.year_group, teacher)
-        self.spring_mark_sheet = MarkSheet(self.name, "Spring", self.year_group, teacher)
-        self.autumn_mark_sheet = MarkSheet(self.name, "Spring", self.year_group, teacher)
+        self.summer_mark_sheet = MarkSheet(self.name, "Summer", self.year_group)
+        self.spring_mark_sheet = MarkSheet(self.name, "Spring", self.year_group)
+        self.autumn_mark_sheet = MarkSheet(self.name, "Spring", self.year_group)
         self.student_controller = StudentController(self, table_name)
         self.student_menu_dict = {'1': self.student_controller.editmarksheet,
                                   '2': self.student_controller.getstudentdetails,
@@ -220,24 +221,21 @@ class Student:
         self.summer_mark_sheet.student = self.name
         self.summer_mark_sheet.term = student_data[7]
         self.summer_mark_sheet.year_group = self.year_group
-        self.summer_mark_sheet.teacher = student_data[8]
-        self.summer_mark_sheet.math_grade = student_data[9]
-        self.summer_mark_sheet.science_grade = student_data[10]
-        self.summer_mark_sheet.english_grade = student_data[11]
+        self.summer_mark_sheet.math_grade = student_data[8]
+        self.summer_mark_sheet.science_grade = student_data[9]
+        self.summer_mark_sheet.english_grade = student_data[10]
         self.spring_mark_sheet.student = self.name
-        self.spring_mark_sheet.term = student_data[12]
+        self.spring_mark_sheet.term = student_data[11]
         self.spring_mark_sheet.year_group = self.year_group
-        self.spring_mark_sheet.teacher = student_data[13]
-        self.spring_mark_sheet.math_grade = student_data[14]
-        self.spring_mark_sheet.science_grade = student_data[15]
-        self.spring_mark_sheet.english_grade = student_data[16]
+        self.spring_mark_sheet.math_grade = student_data[12]
+        self.spring_mark_sheet.science_grade = student_data[13]
+        self.spring_mark_sheet.english_grade = student_data[14]
         self.autumn_mark_sheet.student = self.name
-        self.autumn_mark_sheet.term = student_data[17]
+        self.autumn_mark_sheet.term = student_data[15]
         self.autumn_mark_sheet.year_group = self.year_group
-        self.autumn_mark_sheet.teacher = student_data[18]
-        self.autumn_mark_sheet.math_grade = student_data[19]
-        self.autumn_mark_sheet.science_grade = student_data[20]
-        self.autumn_mark_sheet.english_grade = student_data[21]
+        self.autumn_mark_sheet.math_grade = student_data[16]
+        self.autumn_mark_sheet.science_grade = student_data[17]
+        self.autumn_mark_sheet.english_grade = student_data[18]
 
     def calculate_age(self):
         current_date = datetime.now()

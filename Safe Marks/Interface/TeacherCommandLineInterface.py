@@ -33,8 +33,8 @@ class SettingsMenuItem:
 
 
 class YearEndMenuItem:
-    def __init__(self, singleton):
-        self.name = singleton.name
+    def __init__(self):
+        pass
 
     def execute(self):
         if Validator("year end").should_continue():
@@ -46,14 +46,15 @@ class YearEndMenuItem:
         student_list = StorageFunctions("students").list("name")
         return student_list
 
-    def increase_year(self, student_list):
+    @staticmethod
+    def increase_year(student_list):
         for student_name in student_list:
-            student = Student(student_name, None, None, None, None, None)
+            student = Student(student_name, None, None, None, None)
             student.recreatestudent()
             if student.year_group != 13:
                 student.year_group += 1
                 student.student_controller.savestudentdata(save_mark_sheet_data=False)
-                student.student_controller.create_mark_sheets(self.name)
+                student.student_controller.create_mark_sheets()
             else:
                 student.year_group = None
                 student.student_controller.savestudentdata(save_mark_sheet_data=False)
@@ -71,7 +72,7 @@ class ManageMenuItem:
         if Validator("manage").should_continue():
             work_on_new_student = True
             while work_on_new_student:
-                message = Student(None, None, None, None, None, None).manage(self.admin)
+                message = Student(None, None, None, None, None).manage(self.admin)
                 print(message)
                 work_on_new_student = bool(int(input("Enter 1 to enter another name and work on another student or 0 to leave.")))
 
@@ -97,7 +98,8 @@ class CreateMenuItem:
     def exit_initiated():
         return False
 
-    def getstudentdetails(self):
+    @staticmethod
+    def getstudentdetails():
         valid = False
         while not valid:
             name = input("Enter student's name:").capitalize()
@@ -108,7 +110,7 @@ class CreateMenuItem:
             address = input("Enter student's address:")
             father_name = input("Enter student's father's name:")
             mother_name = input("Enter student's mother's name:")
-            student = Student(name, date_of_birth, address, father_name, mother_name, teacher=self.singleton.name)
+            student = Student(name, date_of_birth, address, father_name, mother_name)
             valid, message = student.student_controller.validate_student_details()
             if message:
                 print(message)
@@ -125,7 +127,7 @@ class CLI:
         self.admin_main_menu_dictionary = {
             "c": CreateMenuItem(singleton),
             "m": ManageMenuItem(singleton.admin),
-            "y": YearEndMenuItem(singleton),
+            "y": YearEndMenuItem(),
             "s": SettingsMenuItem(singleton),
             "l": LogoutMenuItem()
         }
