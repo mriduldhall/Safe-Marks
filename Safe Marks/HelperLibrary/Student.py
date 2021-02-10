@@ -51,10 +51,12 @@ class StudentController:
     def create_mark_sheets(self):
         student_id = StorageFunctions("students").retrieve(["name"], [self.student.name])[0][0]
         term_id_list = StorageFunctions("terms").list("id")
+        term_name_list = StorageFunctions("terms").list("term")
         for term_id in term_id_list:
             mark_sheets_data = StorageFunctions("mark_sheets").retrieve(["student_id", "term_id", "year_group_id"], [student_id, term_id, self.student.year_group])
             if not mark_sheets_data:
                 StorageFunctions("mark_sheets").append("(math_mark, science_mark, english_mark, student_id, term_id, year_group_id)", [0, 0, 0, student_id, term_id, self.student.year_group])
+                self.student.__setattr__(term_name_list[term_id_list.index(term_id)].lower() + "_mark_sheet", MarkSheet(self.student.name, term_name_list[term_id_list.index(term_id)].lower(), self.student.year_group))
 
     def validate_student_details(self):
         if self.student.age < 1:
@@ -134,7 +136,8 @@ class StudentController:
 
     def edit_year_group(self):
         print("Student's current year group is", self.student.year_group)
-        self.student.year_group = int(input("Enter new year_group for student:"))
+        self.student.year_group = int(input("Enter new year group for student:"))
+        self.create_mark_sheets()
 
     def edit_date_of_birth(self):
         print("Student's current date of birth is", self.student.date_of_birth)
