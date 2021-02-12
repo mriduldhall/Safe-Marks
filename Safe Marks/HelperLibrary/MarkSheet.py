@@ -7,7 +7,7 @@ class MarkSheet:
         self.science_grade = science_grade
         self.english_grade = english_grade
 
-    def editmarksheet(self):
+    def edit_mark_sheet(self):
         continuation_check = True
         while continuation_check:
             subject_list = ["math", "science", "english"]
@@ -20,14 +20,14 @@ class MarkSheet:
                 print("Current", subject_list[int(choice)-1], "grade is", getattr(self, subject_list[int(choice)-1] + "_grade"))
                 print("Enter new", subject_list[int(choice)-1], "grade:", end='')
                 setattr(self, (subject_list[int(choice)-1] + "_grade"), input())
-        self.getmarks()
+        self.get_marks()
 
-    def getdetails(self):
+    def get_details(self):
         print("Student name =", self.student)
         print("Term =", self.term)
         print("Year group =", self.year_group)
 
-    def getmarks(self):
+    def get_marks(self):
         print("Maths marks =", self.math_grade)
         print("English marks =", self.science_grade)
         print("Science marks =", self.english_grade)

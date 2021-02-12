@@ -50,14 +50,16 @@ class YearEndMenuItem:
     def increase_year(student_list):
         for student_name in student_list:
             student = Student(student_name, None, None, None, None)
-            student.recreatestudent()
-            if student.year_group != 13:
-                student.year_group += 1
-                student.student_controller.savestudentdata(save_mark_sheet_data=False)
-                student.student_controller.create_mark_sheets()
-            else:
-                student.year_group = None
-                student.student_controller.savestudentdata(save_mark_sheet_data=False)
+            student.recreate_student()
+            if not student.leave_date:
+                if student.year_group != 13:
+                    student.year_group += 1
+                    student.student_controller.save_student_data(save_mark_sheet_data=False)
+                    student.student_controller.create_mark_sheets()
+                else:
+                    student.year_group = None
+                    student.leave_date = datetime.now()
+                    student.student_controller.save_student_data(save_mark_sheet_data=False)
 
     @staticmethod
     def exit_initiated():

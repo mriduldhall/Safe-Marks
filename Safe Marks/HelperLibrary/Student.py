@@ -10,7 +10,7 @@ class StudentController:
         self.student = student
         self.table_name = table_name
 
-    def retrievedata(self):
+    def retrieve_data(self):
         self.student.name = (self.student.name.lower()).capitalize()
         student_data = StorageFunctions("students").retrieve(["name"], [self.student.name])
         student_data = list(student_data[0])
@@ -22,7 +22,10 @@ class StudentController:
             mark_sheet_data = StorageFunctions("mark_sheets").retrieve(["student_id", "term_id", "year_group_id"], [student_id, term_id, year_group_id])
             term_data = StorageFunctions("terms").retrieve(["id"], [term_id])
             term = [(term_data[0])[1]]
-            student_data = student_data + term + list((mark_sheet_data[0])[1:4])
+            if mark_sheet_data:
+                student_data = student_data + term + list((mark_sheet_data[0])[1:4])
+            else:
+                student_data = student_data + term + [None, None, None]
         return student_data
 
     def validate_if_student_exists(self):
@@ -31,6 +34,12 @@ class StudentController:
             return False
         else:
             return True
+
+    def check_archive_status(self):
+        if self.student.leave_date:
+            return True
+        else:
+            return False
 
     def list_students(self):
         list_of_students = StorageFunctions(self.table_name).list("name")
@@ -41,7 +50,7 @@ class StudentController:
             counter += 1
 
     def create_student(self):
-        StorageFunctions(self.table_name).append("(name, age, current_year_group, date_of_birth, address, father_name, mother_name)", [self.student.name, self.student.age, self.student.year_group, self.student.date_of_birth, self.student.address, self.student.father_name, self.student.mother_name])
+        StorageFunctions(self.table_name).append("(name, age, current_year_group, date_of_birth, address, father_name, mother_name, leave_date)", [self.student.name, self.student.age, self.student.year_group, self.student.date_of_birth, self.student.address, self.student.father_name, self.student.mother_name, self.student.leave_date])
         student_data = StorageFunctions(self.table_name).retrieve(["name"], [self.student.name])
         student_data = student_data[0]
         StorageFunctions("mark_sheets").append("(math_mark, science_mark, english_mark, student_id, term_id, year_group_id)", [self.student.summer_mark_sheet.math_grade, self.student.summer_mark_sheet.science_grade, self.student.summer_mark_sheet.english_grade, student_data[0], (StorageFunctions("terms").retrieve(["term"], ["Summer"])[0])[0], self.student.year_group])
@@ -71,7 +80,7 @@ class StudentController:
             return True, None
 
     @staticmethod
-    def _choosemarksheet(activity):
+    def _choose_mark_sheet(activity):
         mark_sheet_choice_dictionary = {'1': 'Summer', '2': 'Spring', '3': 'Autumn'}
         while True:
             print("Enter 1 to", activity, "the summer term mark sheet, 2 for spring term mark sheet and 3 for autumn term mark sheet", end='')
@@ -81,7 +90,7 @@ class StudentController:
             else:
                 return mark_sheet_choice
 
-    def getstudentdetails(self):
+    def get_student_details(self):
         print("Student name:", self.student.name)
         print("Student age:", self.student.age)
         print("Student year group:", self.student.year_group)
@@ -89,18 +98,45 @@ class StudentController:
         print("Student address:", self.student.address)
         print("Student father's name:", self.student.father_name)
         print("Student mother's name:", self.student.mother_name)
+        print("Student leave date:", self.student.leave_date)
 
-    def getmarksheetdetails(self):
-        mark_sheet_choice = self._choosemarksheet("get details of")
-        MarkSheet.getdetails(getattr(self.student, mark_sheet_choice.lower() + "_mark_sheet"))
+    def get_mark_sheet_details(self):
+        mark_sheet_choice = self._choose_mark_sheet("get details of")
+        MarkSheet.get_details(getattr(self.student, mark_sheet_choice.lower() + "_mark_sheet"))
 
-    def getmarksheetmarks(self):
-        mark_sheet_choice = self._choosemarksheet("get marks of")
-        MarkSheet.getmarks(getattr(self.student, mark_sheet_choice.lower() + "_mark_sheet"))
+    def archive_get_mark_sheet_detail(self):
+        mark_sheet_choice = self._choose_mark_sheet("get details of")
+        term_id = StorageFunctions("terms").retrieve(["term"], [mark_sheet_choice])[0][0]
+        year_group = input("Enter year group to get data of:")
+        year_group_id = StorageFunctions("year_groups").retrieve(["year_group"], [year_group])[0][0]
+        student_id = StorageFunctions("students").retrieve(["name"], [self.student.name])[0][0]
+        mark_sheet_data = StorageFunctions("mark_sheets").retrieve(["student_id", "term_id", "year_group_id"], [student_id, term_id, year_group_id])
+        if mark_sheet_data:
+            mark_sheet_data = mark_sheet_data[0]
+            MarkSheet.get_details(MarkSheet(self.student.name, mark_sheet_choice, year_group, mark_sheet_data[1], mark_sheet_data[2], mark_sheet_data[3]))
+        else:
+            print("No data available!")
 
-    def editmarksheet(self):
-        mark_sheet_choice = self._choosemarksheet("edit")
-        self.student.__getattribute__(mark_sheet_choice.lower() + "_mark_sheet").editmarksheet()
+    def get_mark_sheet_marks(self):
+        mark_sheet_choice = self._choose_mark_sheet("get marks of")
+        MarkSheet.get_marks(getattr(self.student, mark_sheet_choice.lower() + "_mark_sheet"))
+
+    def archive_get_mark_sheet_marks(self):
+        mark_sheet_choice = self._choose_mark_sheet("get details of")
+        term_id = StorageFunctions("terms").retrieve(["term"], [mark_sheet_choice])[0][0]
+        year_group = input("Enter year group to get data of:")
+        year_group_id = StorageFunctions("year_groups").retrieve(["year_group"], [year_group])[0][0]
+        student_id = StorageFunctions("students").retrieve(["name"], [self.student.name])[0][0]
+        mark_sheet_data = StorageFunctions("mark_sheets").retrieve(["student_id", "term_id", "year_group_id"], [student_id, term_id, year_group_id])
+        if mark_sheet_data:
+            mark_sheet_data = mark_sheet_data[0]
+            MarkSheet.get_marks(MarkSheet(self.student.name, mark_sheet_choice, year_group, mark_sheet_data[1], mark_sheet_data[2], mark_sheet_data[3]))
+        else:
+            print("No data available!")
+
+    def edit_mark_sheet(self):
+        mark_sheet_choice = self._choose_mark_sheet("edit")
+        self.student.__getattribute__(mark_sheet_choice.lower() + "_mark_sheet").edit_mark_sheet()
 
     def edit_student_details(self):
         attributes = {
@@ -129,7 +165,7 @@ class StudentController:
             self.student.name = input("Enter new name for student:")
             if not self.validate_if_student_exists():
                 valid_name = True
-                self.savestudentdata(original_name)
+                self.save_student_data(original_name)
             else:
                 print("Student already exists!")
                 self.student.name = original_name
@@ -159,13 +195,13 @@ class StudentController:
         print("Student's father's current name is", self.student.mother_name)
         self.student.mother_name = input("Enter new name for student's mother:")
 
-    def savestudentdata(self, old_name=None, save_mark_sheet_data=True):
+    def save_student_data(self, old_name=None, save_mark_sheet_data=True):
         if not old_name:
             student_data = StorageFunctions("students").retrieve(["name"], [self.student.name])
         else:
             student_data = StorageFunctions("students").retrieve(["name"], [old_name])
         student_id = (student_data[0])[0]
-        StorageFunctions("students").update(["name", "age", "current_year_group", "date_of_birth", "address", "father_name", "mother_name"], [self.student.name, self.student.age, self.student.year_group, self.student.date_of_birth, self.student.address, self.student.father_name, self.student.mother_name], student_id)
+        StorageFunctions("students").update(["name", "age", "current_year_group", "date_of_birth", "address", "father_name", "mother_name", "leave_date"], [self.student.name, self.student.age, self.student.year_group, self.student.date_of_birth, self.student.address, self.student.father_name, self.student.mother_name, self.student.leave_date], student_id)
         if save_mark_sheet_data:
             term_id_list = StorageFunctions("terms").list("id")
             for term_id in term_id_list:
@@ -175,7 +211,7 @@ class StudentController:
                 term = (term_data[0])[1]
                 StorageFunctions("mark_sheets").update(["math_mark", "science_mark", "english_mark"], [getattr(self.student, term.lower() + "_mark_sheet").math_grade, getattr(self.student, term.lower() + "_mark_sheet").science_grade, getattr(self.student, term.lower() + "_mark_sheet").english_grade], mark_sheet_id)
 
-    def deletestudent(self):
+    def delete_student(self):
         student_data = StorageFunctions("students").retrieve(["name"], [self.student.name])
         student_id = (student_data[0])[0]
         StorageFunctions("mark_sheets").delete(student_id, "student_id")
@@ -195,25 +231,35 @@ class Student:
         self.address = address
         self.father_name = father_name
         self.mother_name = mother_name
+        self.leave_date = None
         self.summer_mark_sheet = MarkSheet(self.name, "Summer", self.year_group)
         self.spring_mark_sheet = MarkSheet(self.name, "Spring", self.year_group)
         self.autumn_mark_sheet = MarkSheet(self.name, "Spring", self.year_group)
         self.student_controller = StudentController(self, table_name)
-        self.student_menu_dict = {'1': self.student_controller.editmarksheet,
-                                  '2': self.student_controller.getstudentdetails,
-                                  '3': self.student_controller.getmarksheetdetails,
-                                  '4': self.student_controller.getmarksheetmarks,
+        self.student_menu_dict = {'1': self.student_controller.edit_mark_sheet,
+                                  '2': self.student_controller.get_student_details,
+                                  '3': self.student_controller.get_mark_sheet_details,
+                                  '4': self.student_controller.get_mark_sheet_marks,
                                   }
-        self.admin_student_menu_dict = {'1': self.student_controller.editmarksheet,
-                                        '2': self.student_controller.getstudentdetails,
-                                        '3': self.student_controller.getmarksheetdetails,
-                                        '4': self.student_controller.getmarksheetmarks,
+        self.admin_student_menu_dict = {'1': self.student_controller.edit_mark_sheet,
+                                        '2': self.student_controller.get_student_details,
+                                        '3': self.student_controller.get_mark_sheet_details,
+                                        '4': self.student_controller.get_mark_sheet_marks,
                                         '5': self.student_controller.edit_student_details,
                                         '6': self.delete,
                                         }
+        self.archive_student_menu_dict = {'1': self.student_controller.get_student_details,
+                                          '2': self.student_controller.archive_get_mark_sheet_detail,
+                                          '3': self.student_controller.archive_get_mark_sheet_marks,
+                                          }
+        self.admin_archive_student_menu_dict = {'1': self.student_controller.get_student_details,
+                                                '2': self.student_controller.archive_get_mark_sheet_detail,
+                                                '3': self.student_controller.archive_get_mark_sheet_marks,
+                                                '4': self.delete,
+                                                }
 
-    def recreatestudent(self):
-        student_data = self.student_controller.retrievedata()
+    def recreate_student(self):
+        student_data = self.student_controller.retrieve_data()
         self.name = student_data[0]
         self.age = student_data[1]
         self.year_group = student_data[2]
@@ -221,24 +267,25 @@ class Student:
         self.address = student_data[4]
         self.father_name = student_data[5]
         self.mother_name = student_data[6]
+        self.leave_date = student_data[7]
         self.summer_mark_sheet.student = self.name
-        self.summer_mark_sheet.term = student_data[7]
+        self.summer_mark_sheet.term = student_data[8]
         self.summer_mark_sheet.year_group = self.year_group
-        self.summer_mark_sheet.math_grade = student_data[8]
-        self.summer_mark_sheet.science_grade = student_data[9]
-        self.summer_mark_sheet.english_grade = student_data[10]
+        self.summer_mark_sheet.math_grade = student_data[9]
+        self.summer_mark_sheet.science_grade = student_data[10]
+        self.summer_mark_sheet.english_grade = student_data[11]
         self.spring_mark_sheet.student = self.name
-        self.spring_mark_sheet.term = student_data[11]
+        self.spring_mark_sheet.term = student_data[12]
         self.spring_mark_sheet.year_group = self.year_group
-        self.spring_mark_sheet.math_grade = student_data[12]
-        self.spring_mark_sheet.science_grade = student_data[13]
-        self.spring_mark_sheet.english_grade = student_data[14]
+        self.spring_mark_sheet.math_grade = student_data[13]
+        self.spring_mark_sheet.science_grade = student_data[14]
+        self.spring_mark_sheet.english_grade = student_data[15]
         self.autumn_mark_sheet.student = self.name
-        self.autumn_mark_sheet.term = student_data[15]
+        self.autumn_mark_sheet.term = student_data[16]
         self.autumn_mark_sheet.year_group = self.year_group
-        self.autumn_mark_sheet.math_grade = student_data[16]
-        self.autumn_mark_sheet.science_grade = student_data[17]
-        self.autumn_mark_sheet.english_grade = student_data[18]
+        self.autumn_mark_sheet.math_grade = student_data[17]
+        self.autumn_mark_sheet.science_grade = student_data[18]
+        self.autumn_mark_sheet.english_grade = student_data[19]
 
     def calculate_age(self):
         current_date = datetime.now()
@@ -262,11 +309,12 @@ class Student:
             self.student_controller.list_students()
         self.name = input("Enter student name to manage student:").capitalize()
         if self.student_controller.validate_if_student_exists():
-            self.recreatestudent()
-            CLI(self, admin).initiate()
+            self.recreate_student()
+            archive = self.student_controller.check_archive_status()
+            CLI(self, admin, archive).initiate()
             return "Exiting..."
         else:
             return "Student does not exist"
 
     def delete(self):
-        self.student_controller.deletestudent()
+        self.student_controller.delete_student()

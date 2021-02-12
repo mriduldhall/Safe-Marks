@@ -1,7 +1,8 @@
 class CLI:
-    def __init__(self, student, admin):
+    def __init__(self, student, admin, archive):
         self.student = student
         self.admin = admin
+        self.archive = archive
 
     def initiate(self):
         exit_condition = False
@@ -9,16 +10,26 @@ class CLI:
         valid_input = False
         while (exit_condition is False) or (valid_input is False):
             save_needed = True
-            if not self.admin:
-                student_menu_choice = input("Enter 1 to edit marks of the student, 2 to get student details, 3 to get mark sheet details, 4 to get marks, 5 to leave this menu:")
+            if (self.admin is False) and (self.archive is False):
+                student_menu_choice = input(
+                    "Enter 1 to edit marks of the student, 2 to get student details, 3 to get mark sheet details, 4 to get marks, 5 to leave this menu:")
                 student_menu_dict = self.student.student_menu_dict
-            else:
-                student_menu_choice = input("Enter 1 to edit marks of the student, 2 to get student details, 3 to get mark sheet details, 4 to get marks, 5 to edit student details, 6 to delete student 7 to leave this menu:")
+            elif (self.admin is True) and (self.archive is False):
+                student_menu_choice = input(
+                    "Enter 1 to edit marks of the student, 2 to get student details, 3 to get mark sheet details, 4 to get marks, 5 to edit student details, 6 to delete student 7 to leave this menu:")
                 student_menu_dict = self.student.admin_student_menu_dict
+            elif (self.admin is False) and (self.archive is True):
+                student_menu_choice = input(
+                    "Enter 1 to get student details, 2 to get mark sheet details, 3 to get marks and 4 to exit this menu:")
+                student_menu_dict = self.student.archive_student_menu_dict
+            else:
+                student_menu_choice = input(
+                    "Enter 1 to get student details, 2 to get mark sheet details, 3 to get marks, 4 to delete student and 5 to exit this menu:")
+                student_menu_dict = self.student.admin_archive_student_menu_dict
             if student_menu_choice == str(len(student_menu_dict) + 1):
                 exit_condition = True
                 valid_input = True
-            elif student_menu_choice == str(len(student_menu_dict)):
+            elif student_menu_choice == str(len(student_menu_dict) + 1):
                 student_menu_dict[student_menu_choice]()
                 exit_condition = True
                 valid_input = True
@@ -31,5 +42,5 @@ class CLI:
                 student_menu_dict[student_menu_choice]()
                 exit_condition = False
                 valid_input = True
-        if save_needed is True:
-            self.student.student_controller.savestudentdata()
+        if (save_needed is True) and (self.archive is False):
+            self.student.student_controller.save_student_data()
