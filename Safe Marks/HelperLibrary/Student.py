@@ -217,6 +217,14 @@ class StudentController:
         StorageFunctions("mark_sheets").delete(student_id, "student_id")
         StorageFunctions("students").delete(student_id)
 
+    def archive(self):
+        leave_year = int(input("Enter leave year:"))
+        leave_month = int(input("Enter leave month:"))
+        leave_date = int(input("Enter leave date:"))
+        self.student.leave_date = datetime(leave_year, leave_month, leave_date)
+        self.student.year_group = None
+        self.save_student_data(save_mark_sheet_data=False)
+
 
 class Student:
     def __init__(self, name, date_of_birth, address, father_name, mother_name, table_name="students"):
@@ -246,7 +254,8 @@ class Student:
                                         '3': self.student_controller.get_mark_sheet_details,
                                         '4': self.student_controller.get_mark_sheet_marks,
                                         '5': self.student_controller.edit_student_details,
-                                        '6': self.delete,
+                                        '6': self.student_controller.archive,
+                                        '7': self.delete,
                                         }
         self.archive_student_menu_dict = {'1': self.student_controller.get_student_details,
                                           '2': self.student_controller.archive_get_mark_sheet_detail,
