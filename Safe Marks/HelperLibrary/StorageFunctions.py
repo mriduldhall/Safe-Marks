@@ -40,8 +40,8 @@ class StorageFunctions:
             data_list.append(data_item[0])
         return data_list
 
-    def retrieve(self, column_list, data_list):
-        query_condition = self.formquerycondition(column_list, data_list, False)
+    def retrieve(self, column_list, data_list, negative=False):
+        query_condition = self.formquerycondition(column_list, data_list, False, negative=negative)
         query = f"SELECT * FROM " + self.table + " WHERE " + query_condition
         data_list = self._executequery(query, data=None, fetching=True)
         return list(data_list)
@@ -52,14 +52,17 @@ class StorageFunctions:
         self._executequery(query, data=None, fetching=False)
 
     @staticmethod
-    def formquerycondition(column_list, data_list, updating=False):
+    def formquerycondition(column_list, data_list, updating=False, negative=False):
         assert len(column_list) == len(data_list), "Columns list and data list do not match"
         query_condition = ""
         for counter in range(len(column_list)):
             if data_list[counter] is not None:
                 query_condition = query_condition + column_list[counter] + " = '" + str(data_list[counter]) + "'"
             else:
-                query_condition = query_condition + column_list[counter] + " = null"
+                if updating:
+                    query_condition = query_condition + column_list[counter] + " = null"
+                else:
+                    query_condition = query_condition + column_list[counter] + " is null"
             if updating:
                 query_condition = query_condition + ", "
             else:
@@ -68,6 +71,9 @@ class StorageFunctions:
             query_condition = query_condition[:-2]
         else:
             query_condition = query_condition[:-5]
+        if negative:
+            query_condition = query_condition.replace("is", "is not")
+            query_condition = query_condition.replace("=", "!=")
         return query_condition
 
     def delete(self, data, identifier="id"):

@@ -44,10 +44,24 @@ class StudentController:
     def list_students(self):
         list_of_students = StorageFunctions(self.table_name).list("name")
         print("List of students:")
-        counter = 1
-        for student_name in sorted(list_of_students):
-            print(counter, ":", student_name, end="\n")
-            counter += 1
+        if list_of_students:
+            counter = 1
+            for student_name in sorted(list_of_students):
+                print(counter, ":", student_name, end="\n")
+                counter += 1
+        else:
+            print("No available students")
+
+    def list_archived_students(self):
+        archived_students_data = StorageFunctions(self.table_name).retrieve(["leave_date"], [None], negative=True)
+        print("List of old students:")
+        if archived_students_data:
+            counter = 1
+            for student_data in archived_students_data:
+                print(counter, ":", student_data[1], end="\n")
+                counter += 1
+        else:
+            print("No available students")
 
     def create_student(self):
         StorageFunctions(self.table_name).append("(name, age, current_year_group, date_of_birth, address, father_name, mother_name, leave_date)", [self.student.name, self.student.age, self.student.year_group, self.student.date_of_birth, self.student.address, self.student.father_name, self.student.mother_name, self.student.leave_date])
@@ -225,6 +239,19 @@ class StudentController:
         self.student.year_group = None
         self.save_student_data(save_mark_sheet_data=False)
 
+    def unarchive(self):
+        self.student.recreate_student()
+        new_year_group = int(input("Enter new year group for student:"))
+        new_year_group_data = StorageFunctions("year_groups").retrieve(["year_group"], [new_year_group])
+        if new_year_group_data:
+            self.student.year_group = new_year_group_data[0][0]
+            self.student.leave_date = None
+            self.create_mark_sheets()
+            self.save_student_data()
+            return "Student successfully added back"
+        else:
+            return "Invalid year group"
+
 
 class Student:
     def __init__(self, name, date_of_birth, address, father_name, mother_name, table_name="students"):
@@ -305,12 +332,22 @@ class Student:
             age -= 1
         return age
 
-    def create(self):
+    def create_new_student(self):
         if not self.student_controller.validate_if_student_exists():
             self.student_controller.create_student()
             return "Student successfully created"
         else:
             return "Student already exists"
+
+    def create_old_student(self):
+        choice_list_of_students = bool(int(input("Enter 1 to get a list of all old students and 0 to continue without a list of students:")))
+        if choice_list_of_students:
+            self.student_controller.list_archived_students()
+        self.name = input("Enter student name to add back into school:").capitalize()
+        if self.student_controller.validate_if_student_exists():
+            return self.student_controller.unarchive()
+        else:
+            return "Student does not exist"
 
     def manage(self, admin):
         choice_list_of_students = bool(int(input("Enter 1 to get a list of all students and 0 to continue without a list of students:")))

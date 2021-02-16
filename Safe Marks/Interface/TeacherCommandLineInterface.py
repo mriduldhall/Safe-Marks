@@ -91,14 +91,25 @@ class CreateMenuItem:
         if Validator("create").should_continue():
             continuation = True
             while continuation is True:
-                student = self.getstudentdetails()
-                message = student.create()
+                menu_options = {
+                    "1": self.new_student,
+                    "2": self.old_student,
+                }
+                menu_choice = input("Enter 1 to create a new student or 2 to add an old student back(unarchive):")
+                if menu_choice in menu_options.keys():
+                    message = menu_options[menu_choice]()
+                else:
+                    message = "Invalid choice"
                 print(message)
                 continuation = bool(int(input("Enter 1 to create another student and 0 to head back to main menu.")))
 
+    def new_student(self):
+        student = self.getstudentdetails()
+        return student.create_new_student()
+
     @staticmethod
-    def exit_initiated():
-        return False
+    def old_student():
+        return Student(None, None, None, None, None).create_old_student()
 
     @staticmethod
     def getstudentdetails():
@@ -117,6 +128,10 @@ class CreateMenuItem:
             if message:
                 print(message)
         return student
+
+    @staticmethod
+    def exit_initiated():
+        return False
 
 
 class CLI:
