@@ -326,9 +326,7 @@ class Student:
     def calculate_age(self):
         current_date = datetime.now()
         age = current_date.year - self.date_of_birth.year
-        if current_date.month < self.date_of_birth.month:
-            age -= 1
-        elif current_date.day < self.date_of_birth.day:
+        if current_date.month < self.date_of_birth.month or ((current_date.month == self.date_of_birth.month) and (current_date.day < self.date_of_birth.day)):
             age -= 1
         return age
 
