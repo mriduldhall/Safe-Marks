@@ -2,6 +2,7 @@ from HelperLibrary.Validator import Validator
 from HelperLibrary.Student import Student
 from HelperLibrary.StorageFunctions import StorageFunctions
 from Interface.SettingsCommandLineInterface import CLI as SettingsCLI
+from Interface.AccountCommandLineInterface import CLI as AccountCLI
 
 from datetime import datetime
 
@@ -83,6 +84,18 @@ class ManageMenuItem:
         return False
 
 
+class ManageAccountsMenuItem:
+    def __init__(self):
+        pass
+
+    def execute(self):
+        AccountCLI().initiate()
+
+    @staticmethod
+    def exit_initiated():
+        return False
+
+
 class CreateMenuItem:
     def __init__(self, singleton):
         self.singleton = singleton
@@ -144,6 +157,7 @@ class CLI:
         self.admin_main_menu_dictionary = {
             "c": CreateMenuItem(singleton),
             "m": ManageMenuItem(singleton.admin),
+            "a": ManageAccountsMenuItem(),
             "y": YearEndMenuItem(),
             "s": SettingsMenuItem(singleton),
             "l": LogoutMenuItem()
@@ -166,7 +180,7 @@ class CLI:
                 choice = input("Enter m to manage students and their mark sheets, s for settings and l to logout:")
                 menu_item = self.main_menu_dictionary.get(choice)
             else:
-                choice = input("Enter c to create new students, m to manage students and their mark sheets, y to change academic year, s for settings and l to logout:")
+                choice = input("Enter c to create new students, m to manage students and their mark sheets, a to manage accounts, y to change academic year, s for settings and l to logout:")
                 menu_item = self.admin_main_menu_dictionary.get(choice)
             if menu_item is None:
                 print("Please enter valid choice")
