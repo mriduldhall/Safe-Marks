@@ -3,7 +3,6 @@ from User.User import User
 
 
 class LoginStore:
-
     def __init__(self, table_name):
         self.table_name = table_name
 
@@ -12,7 +11,7 @@ class LoginStore:
         if not user_data:
             return None
         elif (user_data[0])[1] == username:
-            return User((user_data[0])[1], (user_data[0])[2], (user_data[0])[3])
+            return User((user_data[0])[1], (user_data[0])[2], (user_data[0])[3],  (user_data[0])[4])
         else:
             return False
 
@@ -28,8 +27,8 @@ class Login:
     def validate_credentials(self, user):
         stored_user = self.login_store.get_password_by_username(user.username)
         if stored_user is None:
-            return self.does_not_exist
+            return self.does_not_exist, None, None
         elif stored_user.password == user.password:
-            return self.logged_in, stored_user.admin
+            return self.logged_in, stored_user.admin, stored_user.enabled
         else:
-            return self.incorrect_credentials
+            return self.incorrect_credentials, None, None

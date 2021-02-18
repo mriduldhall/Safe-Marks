@@ -7,12 +7,13 @@ class Singleton:
             raise Exception("Singleton does not exist!")
         return Singleton.__instance
 
-    def __init__(self, name, admin):
+    def __init__(self, name, admin, enabled):
         if Singleton.__instance is not None:
             raise Exception("This class is a singleton!")
         else:
             self.name = name
             self.admin = admin
+            self.enabled = enabled
             Singleton.__instance = True
 
     @staticmethod

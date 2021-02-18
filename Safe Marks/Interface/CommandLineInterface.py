@@ -7,7 +7,6 @@ from Interface.TeacherCommandLineInterface import CLI as teacher_CLI
 
 
 class ExitMenuItem:
-
     def __init__(self):
         self.is_exit_initiated = False
 
@@ -24,7 +23,6 @@ class ExitMenuItem:
 
 
 class RegisterMenuItem:
-
     def __init__(self):
         pass
 
@@ -39,20 +37,18 @@ class RegisterMenuItem:
     def execute(self):
         if Validator("register").should_continue():
             user = self._get_new_user_details()
-            msg = Registration().register(user)
-            print(msg)
-
+            message = Registration().register(user)
+            print(message)
         return False
 
     @staticmethod
     def _get_new_user_details():
         username = (input("Please enter your username:")).capitalize()
         password = input("Please enter a password for you account:")
-        return User(username, password, False)
+        return User(username, password)
 
 
 class LoginMenuItem:
-
     def __init__(self, login_module=Login()):
         self.login_module = login_module
 
@@ -72,7 +68,7 @@ class LoginMenuItem:
             while (logged_in is False) and (try_again is True):
                 username = (input("Enter your username:")).capitalize()
                 password = input("Enter your password:")
-                login_result, admin = self.login_module.validate_credentials(User(username, password, None))
+                login_result, admin, enabled = self.login_module.validate_credentials(User(username, password, None, None))
                 if login_result == Login.logged_in:
                     print("Successfully logged in")
                     logged_in = True
@@ -85,13 +81,12 @@ class LoginMenuItem:
                     print("Incorrect username and/or password")
                     try_again = bool(int(input("Would you like to try again? Enter 1 to try again and 0 to exit.")))
             if logged_in_username is not None:
-                singleton = Singleton(logged_in_username, admin)
+                singleton = Singleton(logged_in_username, admin, enabled)
                 teacher_CLI(singleton).initiate()
                 singleton.reset()
 
 
 class InformationMenuItem:
-
     def __init__(self):
         pass
 
@@ -110,9 +105,8 @@ class InformationMenuItem:
 
 
 class CLI:
-
     def __init__(self):
-        self.mainmenu_dict = {
+        self.main_menu_dict = {
             'r': RegisterMenuItem(),
             'l': LoginMenuItem(),
             'i': InformationMenuItem(),
@@ -126,7 +120,7 @@ class CLI:
         while not exit_initiated:
             choice = input(
                 "Enter r to register a teacher account, l to login or i to get more information.\nEnter e to exit the software.")
-            menu_item = self.mainmenu_dict.get(choice)
+            menu_item = self.main_menu_dict.get(choice)
             if menu_item is None:
                 print("Enter valid choice")
                 continue

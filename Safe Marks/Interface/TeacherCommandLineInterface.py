@@ -148,12 +148,21 @@ class CLI:
             "s": SettingsMenuItem(singleton),
             "l": LogoutMenuItem()
         }
+        self.disabled_main_menu_dictionary = {
+            "s": SettingsMenuItem(singleton),
+            "l": LogoutMenuItem(),
+        }
         self.admin = singleton.admin
+        self.enabled = singleton.enabled
 
     def initiate(self):
         exit_initiated = False
         while not exit_initiated:
-            if not self.admin:
+            if not self.enabled:
+                print("Your account has been marked disabled. Please contact an administrator to get this changed.")
+                choice = input("Enter s for settings and l to logout:")
+                menu_item = self.disabled_main_menu_dictionary.get(choice)
+            elif not self.admin:
                 choice = input("Enter m to manage students and their mark sheets, s for settings and l to logout:")
                 menu_item = self.main_menu_dictionary.get(choice)
             else:
