@@ -85,11 +85,11 @@ class ManageMenuItem:
 
 
 class ManageAccountsMenuItem:
-    def __init__(self):
-        pass
+    def __init__(self, singleton):
+        self.singleton = singleton
 
     def execute(self):
-        AccountCLI().initiate()
+        AccountCLI(self.singleton).initiate()
 
     @staticmethod
     def exit_initiated():
@@ -157,7 +157,7 @@ class CLI:
         self.admin_main_menu_dictionary = {
             "c": CreateMenuItem(singleton),
             "m": ManageMenuItem(singleton.admin),
-            "a": ManageAccountsMenuItem(),
+            "a": ManageAccountsMenuItem(singleton),
             "y": YearEndMenuItem(),
             "s": SettingsMenuItem(singleton),
             "l": LogoutMenuItem()
