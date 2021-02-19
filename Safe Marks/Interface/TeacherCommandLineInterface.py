@@ -174,13 +174,13 @@ class CLI:
         while not exit_initiated:
             if not self.enabled:
                 print("Your account has been marked disabled. Please contact an administrator to get this changed.")
-                choice = input("Enter s for settings and l to logout:")
+                choice = input("Enter s for settings and l to logout:").lower()
                 menu_item = self.disabled_main_menu_dictionary.get(choice)
             elif not self.admin:
-                choice = input("Enter m to manage students and their mark sheets, s for settings and l to logout:")
+                choice = input("Enter m to manage students and their mark sheets, s for settings and l to logout:").lower()
                 menu_item = self.main_menu_dictionary.get(choice)
             else:
-                choice = input("Enter c to create new students, m to manage students and their mark sheets, a to manage accounts, y to change academic year, s for settings and l to logout:")
+                choice = input("Enter c to create new students, m to manage students and their mark sheets, a to manage accounts, y to change academic year, s for settings and l to logout:").lower()
                 menu_item = self.admin_main_menu_dictionary.get(choice)
             if menu_item is None:
                 print("Please enter valid choice")

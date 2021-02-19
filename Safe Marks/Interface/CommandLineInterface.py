@@ -119,7 +119,7 @@ class CLI:
 
         while not exit_initiated:
             choice = input(
-                "Enter r to register a teacher account, l to login or i to get more information.\nEnter e to exit the software.")
+                "Enter r to register a teacher account, l to login or i to get more information.\nEnter e to exit the software.").lower()
             menu_item = self.main_menu_dict.get(choice)
             if menu_item is None:
                 print("Enter valid choice")
