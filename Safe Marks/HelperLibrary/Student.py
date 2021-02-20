@@ -361,4 +361,9 @@ class Student:
             return "Student does not exist"
 
     def delete(self):
-        self.student_controller.delete_student()
+        confirm_deletion = bool(int(input("Enter 1 to confirm deletion of student and 0 to cancel deletion:")))
+        if confirm_deletion:
+            self.student_controller.delete_student()
+            return True
+        else:
+            return False

@@ -17,10 +17,13 @@ class CLI:
                 exit_condition = True
                 valid_input = True
             elif (self.menu_choice == str(len(self.menu_dict))) and (self.admin is True):
-                self.menu_dict[self.menu_choice]()
-                exit_condition = True
-                valid_input = True
-                save_needed = False
+                if self.menu_dict[self.menu_choice]():
+                    exit_condition = True
+                    valid_input = True
+                    save_needed = False
+                else:
+                    exit_condition = False
+                    valid_input = True
             elif (self.menu_choice > str(len(self.menu_dict) + 1)) or self.menu_choice < "1":
                 print("Please enter a valid choice!")
                 valid_input = False
