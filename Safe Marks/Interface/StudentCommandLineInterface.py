@@ -39,19 +39,19 @@ class CLI:
     def find_student_menu(self):
         if (self.admin is False) and (self.archive is False):
             self.menu_choice = input(
-                "Enter 1 to edit marks of the student, 2 to get student details, 3 to get mark sheet details, 4 to get marks, 5 to leave this menu:")
+                "Enter 1 to edit marks of the student, 2 to get student details, 3 to get mark sheet details, 4 to get marks, 5 to get all student data and 6 to leave this menu:")
             self.menu_dict = self.student.student_menu_dict
         elif (self.admin is True) and (self.archive is False):
             self.menu_choice = input(
-                "Enter 1 to edit marks of the student, 2 to get student details, 3 to get mark sheet details, 4 to get marks, 5 to edit student details, 6 to remove student from school(archive), 7 to permanently delete student 8 to leave this menu:")
+                "Enter 1 to edit marks of the student, 2 to get student details, 3 to get mark sheet details, 4 to get marks, 5 to edit student details, 6 to get all student data, 7 to remove student from school(archive), 8 to permanently delete student and 9 to leave this menu:")
             self.menu_dict = self.student.admin_student_menu_dict
         elif (self.admin is False) and (self.archive is True):
             self.menu_choice = input(
-                "Enter 1 to get student details, 2 to get mark sheet details, 3 to get marks and 4 to exit this menu:")
+                "Enter 1 to get student details, 2 to get mark sheet details, 3 to get marks, 4 to get all student data and 5 to exit this menu:")
             self.menu_dict = self.student.archive_student_menu_dict
         else:
             self.menu_choice = input(
-                "Enter 1 to get student details, 2 to get mark sheet details, 3 to get marks, 4 to delete student and 5 to exit this menu:")
+                "Enter 1 to get student details, 2 to get mark sheet details, 3 to get marks, 4 to get all student data, 5 to delete student and 6 to exit this menu:")
             self.menu_dict = self.student.admin_archive_student_menu_dict
 
     def check_special_conditions(self):

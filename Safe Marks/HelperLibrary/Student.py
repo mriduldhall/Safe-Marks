@@ -148,6 +148,29 @@ class StudentController:
         else:
             print("No data available!")
 
+    def get_all_student_data(self):
+        self.get_student_details()
+        print()
+        student_id = StorageFunctions("students").retrieve(["name"], [self.student.name])[0][0]
+        all_mark_sheets_data = StorageFunctions("mark_sheets").retrieve(['student_id'], [student_id])
+        all_year_group_ids = []
+        for student_mark_sheet_data in all_mark_sheets_data:
+            mark_sheet_year_group_id = student_mark_sheet_data[6]
+            if mark_sheet_year_group_id not in all_year_group_ids:
+                all_year_group_ids.append(mark_sheet_year_group_id)
+        all_year_group_ids.sort()
+        term_ids_list = StorageFunctions("terms").list("id")
+        term_names_list = StorageFunctions("terms").list("term")
+        for year_group_id in all_year_group_ids:
+            year_group = StorageFunctions("year_groups").retrieve(['id'], [year_group_id])[0][1]
+            print("Year", year_group, ":")
+            for term_id in term_ids_list:
+                mark_sheet_data = StorageFunctions("mark_sheets").retrieve(['student_id', 'year_group_id', 'term_id'], [student_id, year_group_id, term_id])[0]
+                mark_sheet = MarkSheet(self.student.name, term_names_list[term_ids_list.index(term_id)], year_group, mark_sheet_data[1], mark_sheet_data[2], mark_sheet_data[3])
+                mark_sheet.get_details()
+                mark_sheet.get_marks()
+                print()
+
     def edit_mark_sheet(self):
         mark_sheet_choice = self._choose_mark_sheet("edit")
         self.student.__getattribute__(mark_sheet_choice.lower() + "_mark_sheet").edit_mark_sheet()
@@ -275,23 +298,27 @@ class Student:
                                   '2': self.student_controller.get_student_details,
                                   '3': self.student_controller.get_mark_sheet_details,
                                   '4': self.student_controller.get_mark_sheet_marks,
+                                  '5': self.student_controller.get_all_student_data,
                                   }
         self.admin_student_menu_dict = {'1': self.student_controller.edit_mark_sheet,
                                         '2': self.student_controller.get_student_details,
                                         '3': self.student_controller.get_mark_sheet_details,
                                         '4': self.student_controller.get_mark_sheet_marks,
                                         '5': self.student_controller.edit_student_details,
-                                        '6': self.student_controller.archive,
-                                        '7': self.delete,
+                                        '6': self.student_controller.get_all_student_data,
+                                        '7': self.student_controller.archive,
+                                        '8': self.delete,
                                         }
         self.archive_student_menu_dict = {'1': self.student_controller.get_student_details,
                                           '2': self.student_controller.archive_get_mark_sheet_detail,
                                           '3': self.student_controller.archive_get_mark_sheet_marks,
+                                          '4': self.student_controller.get_all_student_data,
                                           }
         self.admin_archive_student_menu_dict = {'1': self.student_controller.get_student_details,
                                                 '2': self.student_controller.archive_get_mark_sheet_detail,
                                                 '3': self.student_controller.archive_get_mark_sheet_marks,
-                                                '4': self.delete,
+                                                '4': self.student_controller.get_all_student_data,
+                                                '5': self.delete,
                                                 }
 
     def recreate_student(self):
